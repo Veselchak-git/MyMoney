@@ -1,0 +1,90 @@
+<div class="max-w-2xl mx-auto p-4">
+  <h1 class="text-2xl font-bold text-gray-800 mb-6">
+    {{ isEdit() ? 'Редактировать транзакцию' : 'Новая транзакция' }}
+  </h1>
+
+  <p-card>
+    <form class="flex flex-col gap-5">
+      <div>
+        <label class="block text-sm font-medium text-gray-600 mb-2">Тип</label>
+        <p-selectButton
+          [(ngModel)]="type"
+          [options]="typeOptions"
+          optionLabel="label"
+          optionValue="value"
+          name="type"
+        />
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-600 mb-2">Сумма (₽)</label>
+        <p-inputNumber
+          [(ngModel)]="amount"
+          name="amount"
+          [min]="0"
+          [max]="999999999"
+          inputId="amount"
+          placeholder="0.00"
+          class="w-full"
+          mode="decimal"
+          [minFractionDigits]="2"
+          [maxFractionDigits]="2"
+        />
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-600 mb-2">Категория</label>
+        <p-select
+          [(ngModel)]="categoryId"
+          name="categoryId"
+          [options]="categories()"
+          optionLabel="name"
+          optionValue="id"
+          placeholder="Выберите категорию"
+          class="w-full"
+        >
+          <ng-template pTemplate="item" let-item>
+            <div class="flex items-center gap-2">
+              <i [class]="item.icon" class="text-sm"></i>
+              <span>{{ item.name }}</span>
+            </div>
+          </ng-template>
+        </p-select>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-600 mb-2">Дата</label>
+        <p-datePicker
+          [(ngModel)]="date"
+          name="date"
+          dateFormat="dd.mm.yy"
+          class="w-full"
+        />
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-600 mb-2">Описание</label>
+        <textarea
+          pTextarea
+          [(ngModel)]="description"
+          name="description"
+          placeholder="Необязательно"
+          rows="3"
+          class="w-full"
+        ></textarea>
+      </div>
+
+      <div class="flex gap-3 justify-end">
+        <a routerLink="/transactions">
+          <p-button label="Отмена" severity="secondary" styleClass="p-button-outlined" />
+        </a>
+        <p-button
+          (click)="save()"
+          [label]="isEdit() ? 'Сохранить' : 'Добавить'"
+          [loading]="loading()"
+          [disabled]="!categoryId || !amount"
+        />
+      </div>
+    </form>
+  </p-card>
+</div>

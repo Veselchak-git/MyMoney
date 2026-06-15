@@ -1,0 +1,110 @@
+<div class="max-w-7xl mx-auto p-4 space-y-6">
+  <h1 class="text-2xl font-bold text-gray-800">Категории</h1>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <p-card header="Доходы">
+      <div class="flex flex-col gap-2">
+        @for (cat of categories(); track cat.id) {
+          @if (cat.type === 'income' || cat.type === 'both') {
+            <div class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-green-50 flex items-center justify-center">
+                  <i [class]="cat.icon" class="text-income text-sm"></i>
+                </div>
+                <span class="font-medium">{{ cat.name }}</span>
+                @if (cat.isDefault) {
+                  <span class="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded">По умолчанию</span>
+                }
+              </div>
+              <div class="flex gap-1">
+                <p-button icon="pi pi-pencil" [rounded]="true" [text]="true" severity="secondary" (click)="openEdit(cat)" />
+                @if (!cat.isDefault) {
+                  <p-button icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger" (click)="delete(cat.id)" />
+                }
+              </div>
+            </div>
+          }
+        }
+        <p-button
+          label="Добавить доход"
+          icon="pi pi-plus"
+          severity="success"
+          styleClass="p-button-outlined mt-2"
+          (click)="openCreate('income')"
+        />
+      </div>
+    </p-card>
+
+    <p-card header="Расходы">
+      <div class="flex flex-col gap-2">
+        @for (cat of categories(); track cat.id) {
+          @if (cat.type === 'expense' || cat.type === 'both') {
+            <div class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-red-50 flex items-center justify-center">
+                  <i [class]="cat.icon" class="text-expense text-sm"></i>
+                </div>
+                <span class="font-medium">{{ cat.name }}</span>
+                @if (cat.isDefault) {
+                  <span class="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded">По умолчанию</span>
+                }
+              </div>
+              <div class="flex gap-1">
+                <p-button icon="pi pi-pencil" [rounded]="true" [text]="true" severity="secondary" (click)="openEdit(cat)" />
+                @if (!cat.isDefault) {
+                  <p-button icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger" (click)="delete(cat.id)" />
+                }
+              </div>
+            </div>
+          }
+        }
+        <p-button
+          label="Добавить расход"
+          icon="pi pi-plus"
+          severity="danger"
+          styleClass="p-button-outlined mt-2"
+          (click)="openCreate('expense')"
+        />
+      </div>
+    </p-card>
+  </div>
+
+  <p-dialog
+    [(visible)]="showDialog"
+    [header]="editingId() ? 'Редактировать категорию' : 'Новая категория'"
+    [modal]="true"
+    [style]="{ width: '400px' }"
+  >
+    <div class="flex flex-col gap-4">
+      <input
+        pInputText
+        [(ngModel)]="name"
+        placeholder="Название"
+        class="w-full"
+      />
+
+      <p-select
+        [(ngModel)]="icon"
+        [options]="icons"
+        optionLabel="label"
+        optionValue="value"
+        placeholder="Иконка"
+        class="w-full"
+      >
+        <ng-template pTemplate="item" let-item>
+          <div class="flex items-center gap-2">
+            <i [class]="item.value" class="text-sm"></i>
+            <span>{{ item.label }}</span>
+          </div>
+        </ng-template>
+      </p-select>
+
+      <p-button
+        (click)="save()"
+        label="Сохранить"
+        [loading]="loading()"
+        [disabled]="!name"
+      />
+    </div>
+  </p-dialog>
+</div>

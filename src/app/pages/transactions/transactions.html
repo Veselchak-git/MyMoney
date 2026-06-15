@@ -1,0 +1,102 @@
+<div class="max-w-7xl mx-auto p-4 space-y-6">
+  <div class="flex items-center justify-between">
+    <h1 class="text-2xl font-bold text-gray-800">Транзакции</h1>
+    <a routerLink="/transactions/new">
+      <p-button label="Добавить" icon="pi pi-plus" />
+    </a>
+  </div>
+
+  <p-card>
+    <div class="flex flex-wrap gap-3">
+      <p-select
+        [options]="[{ label: 'Все', value: 'all' }, { label: 'Доходы', value: 'income' }, { label: 'Расходы', value: 'expense' }]"
+        [(ngModel)]="filterType"
+        optionLabel="label"
+        optionValue="value"
+        placeholder="Тип"
+        class="w-40"
+      />
+
+      <p-select
+        [options]="categories()"
+        [(ngModel)]="filterCategory"
+        optionLabel="name"
+        optionValue="id"
+        placeholder="Категория"
+        class="w-48"
+        [showClear]="true"
+      />
+
+      <input
+        pInputText
+        type="text"
+        placeholder="Поиск..."
+        [(ngModel)]="searchText"
+        class="w-48"
+      />
+
+      <p-datePicker
+        [(ngModel)]="filterDate"
+        placeholder="Дата"
+        dateFormat="dd.mm.yy"
+        [showClear]="true"
+      />
+    </div>
+  </p-card>
+
+  @if (filteredTransactions().length === 0) {
+    <div class="text-center py-16 text-gray-400">
+      <i class="pi pi-inbox text-5xl block mb-4"></i>
+      <p class="text-lg">Транзакции не найдены</p>
+    </div>
+  }
+
+  @for (tx of filteredTransactions(); track tx.id) {
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 flex items-center justify-between hover:shadow-md transition-shadow">
+      <div class="flex items-center gap-4">
+        <div
+          class="w-12 h-12 rounded-full flex items-center justify-center"
+          [class.bg-green-50]="tx.type === 'income'"
+          [class.bg-red-50]="tx.type === 'expense'"
+        >
+          <i
+            [class]="categoryMap().get(tx.categoryId)?.icon || 'pi pi-question'"
+            [class.text-income]="tx.type === 'income'"
+            [class.text-expense]="tx.type === 'expense'"
+          ></i>
+        </div>
+
+        <div>
+          <div class="font-medium">{{ categoryMap().get(tx.categoryId)?.name || 'Без категории' }}</div>
+          @if (tx.description) {
+            <div class="text-sm text-gray-400">{{ tx.description }}</div>
+          }
+          <div class="text-xs text-gray-300">{{ formatShortDate(tx.date) }}</div>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <span
+          class="font-bold"
+          [class.text-income]="tx.type === 'income'"
+          [class.text-expense]="tx.type === 'expense'"
+        >
+          {{ tx.type === 'income' ? '+' : '-' }}{{ formatAmount(tx.amount) }}
+        </span>
+
+        <div class="flex gap-1">
+          <a [routerLink]="['/transactions', tx.id, 'edit']">
+            <p-button icon="pi pi-pencil" [rounded]="true" [text]="true" severity="secondary" />
+          </a>
+          <p-button
+            icon="pi pi-trash"
+            [rounded]="true"
+            [text]="true"
+            severity="danger"
+            (click)="deleteTransaction(tx.id)"
+          />
+        </div>
+      </div>
+    </div>
+  }
+</div>

@@ -1,0 +1,123 @@
+<div class="max-w-7xl mx-auto p-4 space-y-6">
+  <h1 class="text-2xl font-bold text-gray-800">Главная</h1>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <p-card class="[&_.p-card-body]:!p-4">
+      <div class="flex items-center gap-3">
+        <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+          <i class="pi pi-wallet text-primary text-xl"></i>
+        </div>
+        <div>
+          <div class="text-sm text-gray-500">Баланс</div>
+          <div class="text-xl font-bold" [class.text-primary]="balance() >= 0" [class.text-red-500]="balance() < 0">
+            {{ formatAmount(balance()) }}
+          </div>
+        </div>
+      </div>
+    </p-card>
+
+    <p-card class="[&_.p-card-body]:!p-4">
+      <div class="flex items-center gap-3">
+        <div class="w-12 h-12 rounded-full bg-green-50 flex items-center justify-center">
+          <i class="pi pi-arrow-up text-income text-xl"></i>
+        </div>
+        <div>
+          <div class="text-sm text-gray-500">Доходы</div>
+          <div class="text-xl font-bold text-income">{{ formatAmount(income()) }}</div>
+        </div>
+      </div>
+    </p-card>
+
+    <p-card class="[&_.p-card-body]:!p-4">
+      <div class="flex items-center gap-3">
+        <div class="w-12 h-12 rounded-full bg-red-50 flex items-center justify-center">
+          <i class="pi pi-arrow-down text-expense text-xl"></i>
+        </div>
+        <div>
+          <div class="text-sm text-gray-500">Расходы</div>
+          <div class="text-xl font-bold text-expense">{{ formatAmount(expense()) }}</div>
+        </div>
+      </div>
+    </p-card>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <p-card header="Транзакции за месяц">
+      <div class="flex justify-between items-center mb-4">
+        <div>
+          <span class="text-sm text-gray-500">Доходы: </span>
+          <span class="font-semibold text-income">{{ formatAmount(monthIncome()) }}</span>
+          <span class="mx-2 text-gray-300">|</span>
+          <span class="text-sm text-gray-500">Расходы: </span>
+          <span class="font-semibold text-expense">{{ formatAmount(monthExpense()) }}</span>
+        </div>
+        <a routerLink="/transactions" class="text-sm text-primary no-underline hover:underline">Все →</a>
+      </div>
+
+      @if (recentTransactions().length === 0) {
+        <div class="text-center py-8 text-gray-400">
+          <i class="pi pi-inbox text-3xl block mb-2"></i>
+          <span class="text-sm">Пока нет транзакций</span>
+        </div>
+      }
+
+      @for (tx of recentTransactions(); track tx.id) {
+        <div class="flex items-center justify-between py-3 border-b border-gray-100 last:border-b-0">
+          <div class="flex items-center gap-3">
+            <div
+              class="w-10 h-10 rounded-full flex items-center justify-center text-sm"
+              [class.bg-green-50]="tx.type === 'income'"
+              [class.bg-red-50]="tx.type === 'expense'"
+            >
+              <i
+                [class]="categoryMap().get(tx.categoryId)?.icon || 'pi pi-question'"
+                [class.text-income]="tx.type === 'income'"
+                [class.text-expense]="tx.type === 'expense'"
+                class="text-sm"
+              ></i>
+            </div>
+            <div>
+              <div class="text-sm font-medium">{{ categoryMap().get(tx.categoryId)?.name || 'Без категории' }}</div>
+              <div class="text-xs text-gray-400">{{ tx.description || formatShortDate(tx.date) }}</div>
+            </div>
+          </div>
+          <span
+            class="font-semibold text-sm"
+            [class.text-income]="tx.type === 'income'"
+            [class.text-expense]="tx.type === 'expense'"
+          >
+            {{ tx.type === 'income' ? '+' : '-' }}{{ formatAmount(tx.amount) }}
+          </span>
+        </div>
+      }
+    </p-card>
+
+    <p-card header="Быстрые действия">
+      <div class="flex flex-col gap-3">
+        <a routerLink="/transactions/new">
+          <p-button
+            label="Добавить доход"
+            icon="pi pi-plus-circle"
+            severity="success"
+            styleClass="w-full justify-center"
+          />
+        </a>
+        <a routerLink="/transactions/new">
+          <p-button
+            label="Добавить расход"
+            icon="pi pi-minus-circle"
+            severity="danger"
+            styleClass="w-full justify-center"
+          />
+        </a>
+        <a routerLink="/analytics">
+          <p-button
+            label="Перейти к аналитике"
+            icon="pi pi-chart-line"
+            styleClass="w-full justify-center p-button-outlined"
+          />
+        </a>
+      </div>
+    </p-card>
+  </div>
+</div>

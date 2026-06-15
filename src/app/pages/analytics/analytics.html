@@ -1,0 +1,54 @@
+<div class="max-w-7xl mx-auto p-4 space-y-6">
+  <h1 class="text-2xl font-bold text-gray-800">Аналитика</h1>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <p-card header="Распределение расходов">
+      <div class="h-80">
+        @if (expenseBreakdown().length > 0) {
+          <p-chart type="pie" [data]="pieChartData()" [options]="chartOptions" [style]="{ height: '100%' }" />
+        } @else {
+          <div class="h-full flex items-center justify-center text-gray-400">Нет данных за месяц</div>
+        }
+      </div>
+    </p-card>
+
+    <p-card header="Доходы и расходы">
+      <div class="h-80">
+        <p-chart type="bar" [data]="barChartData()" [options]="barOptions" [style]="{ height: '100%' }" />
+      </div>
+    </p-card>
+  </div>
+
+  <p-card header="Динамика баланса">
+    <div class="h-80">
+      <p-chart type="line" [data]="lineChartData()" [options]="lineOptions" [style]="{ height: '100%' }" />
+    </div>
+  </p-card>
+
+  @if (expenseBreakdown().length > 0) {
+    <p-card header="Детализация расходов">
+      <div class="space-y-3">
+        @for (item of expenseBreakdown(); track item.category.id) {
+          <div class="flex items-center gap-4">
+            <div class="w-10 h-10 rounded-full bg-red-50 flex items-center justify-center flex-shrink-0">
+              <i [class]="item.category.icon" class="text-expense text-sm"></i>
+            </div>
+            <div class="flex-1">
+              <div class="flex justify-between mb-1">
+                <span class="font-medium">{{ item.category.name }}</span>
+                <span class="font-semibold">{{ formatAmount(item.amount) }}</span>
+              </div>
+              <div class="w-full bg-gray-100 rounded-full h-2">
+                <div
+                  class="bg-primary h-2 rounded-full transition-all"
+                  [style.width.%]="item.percentage"
+                ></div>
+              </div>
+            </div>
+            <span class="text-sm text-gray-400 w-10 text-right">{{ item.percentage }}%</span>
+          </div>
+        }
+      </div>
+    </p-card>
+  }
+</div>
