@@ -1,0 +1,121 @@
+{
+  "configVersion": 1,
+  "timestamp": 1781700744481,
+  "index": "/MyMoney/index.html",
+  "assetGroups": [
+    {
+      "name": "app",
+      "installMode": "prefetch",
+      "updateMode": "prefetch",
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "urls": [
+        "/MyMoney/chunk-36JN3LZY.js",
+        "/MyMoney/chunk-6PJIBPEC.js",
+        "/MyMoney/chunk-ARCULUJP.js",
+        "/MyMoney/chunk-BDDYYJL5.js",
+        "/MyMoney/chunk-CYUC5BFT.js",
+        "/MyMoney/chunk-JQSPOHRU.js",
+        "/MyMoney/chunk-KR7E6EA2.js",
+        "/MyMoney/chunk-L236W5ZY.js",
+        "/MyMoney/chunk-M3TK5KRQ.js",
+        "/MyMoney/chunk-NDPNWVXN.js",
+        "/MyMoney/chunk-PG4O7MBX.js",
+        "/MyMoney/chunk-TN5OLN3C.js",
+        "/MyMoney/chunk-VHAJW4QD.js",
+        "/MyMoney/chunk-XXDN3TXL.js",
+        "/MyMoney/chunk-ZMQ6FNUC.js",
+        "/MyMoney/favicon.ico",
+        "/MyMoney/index.html",
+        "/MyMoney/main-M5XJ4QHP.js",
+        "/MyMoney/manifest.webmanifest",
+        "/MyMoney/polyfills-5CFQRCPP.js",
+        "/MyMoney/styles-5JZX35AC.css"
+      ],
+      "patterns": []
+    },
+    {
+      "name": "assets",
+      "installMode": "lazy",
+      "updateMode": "prefetch",
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "urls": [
+        "/MyMoney/fonts/Manrope-Medium.ttf",
+        "/MyMoney/fonts/Manrope-Medium.woff2",
+        "/MyMoney/icons/icon-128x128.png",
+        "/MyMoney/icons/icon-144x144.png",
+        "/MyMoney/icons/icon-152x152.png",
+        "/MyMoney/icons/icon-192x192.png",
+        "/MyMoney/icons/icon-384x384.png",
+        "/MyMoney/icons/icon-512x512.png",
+        "/MyMoney/icons/icon-72x72.png",
+        "/MyMoney/icons/icon-96x96.png",
+        "/MyMoney/media/primeicons-4GST5W3O.woff2",
+        "/MyMoney/media/primeicons-DHQU4SEP.svg",
+        "/MyMoney/media/primeicons-GEFHGEHP.ttf",
+        "/MyMoney/media/primeicons-P53SE5CV.woff"
+      ],
+      "patterns": []
+    }
+  ],
+  "dataGroups": [],
+  "hashTable": {
+    "/MyMoney/chunk-36JN3LZY.js": "adbcb022925d6fcbfad42ff9c71be160b5727f89",
+    "/MyMoney/chunk-6PJIBPEC.js": "4b27c216b0c25ea10ee6a0fce81a16cdfa16b059",
+    "/MyMoney/chunk-ARCULUJP.js": "af7dfbab56c1d84fcee012adb1ff14b35c678364",
+    "/MyMoney/chunk-BDDYYJL5.js": "9fce10f3a12db6c8333114ee3327a3664a4ae432",
+    "/MyMoney/chunk-CYUC5BFT.js": "ba87b69ff607f844592519346302003f3d9ccd4e",
+    "/MyMoney/chunk-JQSPOHRU.js": "4667417ab094f7c4eaa2e3686dbc11d318d58056",
+    "/MyMoney/chunk-KR7E6EA2.js": "8314e3d228e22243044a65513e0be40500edbab1",
+    "/MyMoney/chunk-L236W5ZY.js": "19030e06a3c694b06720cb9a8d6ee4c5a2e7ca0a",
+    "/MyMoney/chunk-M3TK5KRQ.js": "83e7cf028bac4b97b0e9156320ff3c1d4f2cf476",
+    "/MyMoney/chunk-NDPNWVXN.js": "b877eaaebebde661dd8701347788769b4e7a1c82",
+    "/MyMoney/chunk-PG4O7MBX.js": "43a9919f512ca94cf381c098fe07fb66bd8c659b",
+    "/MyMoney/chunk-TN5OLN3C.js": "a4fa0635fade84050b2f80ca2f53a395553b6edd",
+    "/MyMoney/chunk-VHAJW4QD.js": "db02fbde1c623a4da658438fb898298dfb48d1c8",
+    "/MyMoney/chunk-XXDN3TXL.js": "6c5f7ca33c9155226c4555704db062b694651e4c",
+    "/MyMoney/chunk-ZMQ6FNUC.js": "f032f6da1535cf73233c49cc0ab15cf14777671e",
+    "/MyMoney/favicon.ico": "9c39f434fe1261f68c5e3eefdf734630d99c5670",
+    "/MyMoney/fonts/Manrope-Medium.ttf": "359eee9d5f6b5496d333ca3bddb61443fd84b601",
+    "/MyMoney/fonts/Manrope-Medium.woff2": "c2645b65959f302883cb2e096442ddc96564c6ab",
+    "/MyMoney/icons/icon-128x128.png": "f912963bdc6d5a38d8f1dd0afbaab2ce8d657acb",
+    "/MyMoney/icons/icon-144x144.png": "b155fd5f2fd5d2ea7760721063003c4cd95fd783",
+    "/MyMoney/icons/icon-152x152.png": "eae6e0f0c8afb8aaae339e2a569b43e9238e5e6c",
+    "/MyMoney/icons/icon-192x192.png": "15c4180454633880d98674aa7394656196c91584",
+    "/MyMoney/icons/icon-384x384.png": "94a915751ef6c9282df9aea405ad679230631814",
+    "/MyMoney/icons/icon-512x512.png": "1de182f76f7329dfa8f9fcdd1fdcdd695bea6a99",
+    "/MyMoney/icons/icon-72x72.png": "aa88a6096bd973be7f6d7a5489bfa6bc2463f8c4",
+    "/MyMoney/icons/icon-96x96.png": "7fb8f59c30ce2ff12c700321a0b39e14b3dc8f95",
+    "/MyMoney/index.html": "62f2ba80084b39c1bb637753cd8a3a6f92c9e97f",
+    "/MyMoney/main-M5XJ4QHP.js": "a81f2e7ff75dee5889a027a2b72331bef963e0f4",
+    "/MyMoney/manifest.webmanifest": "c8d120080a19f0b85ee90283414c94869c8721a2",
+    "/MyMoney/media/primeicons-4GST5W3O.woff2": "837c1279b6af9d297f34fdb43e6fcc9206a79f32",
+    "/MyMoney/media/primeicons-DHQU4SEP.svg": "a07ae39027c1a780b42fd82fad7575c2924d9d28",
+    "/MyMoney/media/primeicons-GEFHGEHP.ttf": "3b878ca7e88945a8ec25814810b95367d8977ae6",
+    "/MyMoney/media/primeicons-P53SE5CV.woff": "361e3af71bb4e515feead2f787348a92a5527158",
+    "/MyMoney/polyfills-5CFQRCPP.js": "f2241e9a25858f895ce299d15f6f22e849e2fd72",
+    "/MyMoney/styles-5JZX35AC.css": "fa749e4f7901d6112cfc883fe74ce386be83ef9d"
+  },
+  "navigationUrls": [
+    {
+      "positive": true,
+      "regex": "^\\/.*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*\\.[^/]*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*__[^/]*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*__[^/]*\\/.*$"
+    }
+  ],
+  "navigationRequestStrategy": "performance"
+}

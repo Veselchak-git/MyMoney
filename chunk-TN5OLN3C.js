@@ -1,0 +1,1 @@
+function m(t){return new Intl.NumberFormat("ru-RU",{style:"currency",currency:"RUB",minimumFractionDigits:2}).format(t)}function o(t){let r=t.toDate();return new Intl.DateTimeFormat("ru-RU",{day:"numeric",month:"short"}).format(r)}export{m as a,o as b};
