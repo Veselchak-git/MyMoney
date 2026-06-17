@@ -1,5 +1,5 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
-import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
+import { RouterOutlet, RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { Auth, signOut } from '@angular/fire/auth';
 import { CategoryService } from './services';
 
@@ -11,6 +11,7 @@ import { CategoryService } from './services';
 })
 export class App implements OnInit {
   private auth = inject(Auth);
+  private router = inject(Router);
   private categoryService = inject(CategoryService);
 
   readonly user = signal(this.auth.currentUser);
@@ -28,11 +29,14 @@ export class App implements OnInit {
       this.user.set(user);
       if (user) {
         this.categoryService.createInitialDefaults();
+      } else if (this.router.url !== '/auth') {
+        this.router.navigate(['/auth']);
       }
     });
   }
 
   async logout(): Promise<void> {
     await signOut(this.auth);
+    await this.router.navigate(['/auth']);
   }
 }
