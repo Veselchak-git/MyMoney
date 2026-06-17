@@ -19,6 +19,9 @@ jobs:
 
       - run: npm ci
 
+      - name: Ensure environments directory
+        run: mkdir -p src/environments
+
       - name: Create environment file
         run: |
           cat > src/environments/environment.ts << 'EOF'
