@@ -1,59 +1,109 @@
-# MyMoney
+# Мои Финансы
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.6.
+**PWA-приложение** для управления личными финансами на Angular 20 + Firebase + PrimeNG 20.
 
-## Development server
+## Возможности
 
-To start a local development server, run:
+- **Dashboard** — баланс, доходы/расходы за выбранный период, быстрый переход к добавлению
+- **Транзакции** — список операций с фильтрацией по типу, категории, дате
+- **Категории** — кастомный диалог с выбором иконок, разделение на доходы/расходы
+- **Аналитика** — графики по категориям (Chart.js), динамика за месяц
+- **Авторизация** — email/password через Firebase Auth
+- **Изоляция данных** — каждый пользователь видит только свои транзакции и категории
+- **Адаптивность** — мобильная вёрстка до 640px, гамбургер-меню
+- **PWA** — Service Worker, офлайн-доступ, установка на устройство
+
+## Технологии
+
+| Компонент | Версия |
+|-----------|--------|
+| Angular | 20 |
+| Firebase | 11 |
+| PrimeNG | 20 |
+| Chart.js | 4 |
+| Tailwind CSS | 4 (через PostCSS, утилитарные классы в `styles.scss`) |
+
+## Установка
+
+### 1. Клонировать репозиторий
 
 ```bash
+git clone https://github.com/Veselchak-git/MyMoney.git
+cd MyMoney
+```
+
+### 2. Настроить Firebase
+
+Создай проект в [Firebase Console](https://console.firebase.google.com/):
+- Включи **Authentication** (только **Email/Password** — Google OAuth отключён)
+- Создай базу **Firestore Database** в режиме `test mode` (потом разверни `firestore.rules`)
+- Зарегистрируй **Web-приложение** в настройках проекта
+
+Скопируй файл настроек:
+
+```bash
+cp src/environments/environment.example.ts src/environments/environment.ts
+cp src/environments/environment.example.ts src/environments/environment.prod.ts
+```
+
+Заполни `environment.ts` данными из Firebase Console:
+
+```ts
+export const environment = {
+  production: false,
+  firebase: {
+    apiKey: 'AIza...',
+    authDomain: 'my-money-xxxxx.firebaseapp.com',
+    projectId: 'my-money-xxxxx',
+    storageBucket: 'my-money-xxxxx.firebasestorage.app',
+    messagingSenderId: '123456789',
+    appId: '1:123456789:web:abc123',
+  },
+};
+```
+
+### 3. Установить зависимости и запустить
+
+```bash
+npm install
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Приложение будет доступно на `http://localhost:4200/`.
 
-## Code scaffolding
+### 4. Развернуть правила Firestore
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+Файл `firestore.rules` уже в репозитории. Скопируй его содержимое в **Firebase Console → Firestore → Rules** и нажми **Publish**.
 
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Сборка
 
 ```bash
-ng generate --help
+ng build --configuration production
 ```
 
-## Building
+Артефакты в `dist/MyMoney/browser/`.
 
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+## Тесты
 
 ```bash
 ng test
 ```
 
-## Running end-to-end tests
+## Структура проекта
 
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
+```
+src/
+├── app/
+│   ├── guards/              # AuthGuard
+│   ├── models/              # Transaction, Category
+│   ├── pages/               # dashboard, transactions, auth, categories, analytics
+│   ├── services/            # TransactionService, CategoryService, AnalyticsService
+│   └── utils/               # formatAmount, formatShortDate
+├── environments/            # Firebase config (gitignored)
+├── index.html
+└── styles.scss              # Глобальные стили + Tailwind utility classes
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+## Лицензия
 
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+MIT
