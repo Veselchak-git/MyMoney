@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1781700744481,
+  "timestamp": 1781701528905,
   "index": "/MyMoney/index.html",
   "assetGroups": [
     {
@@ -28,7 +28,7 @@
         "/MyMoney/chunk-ZMQ6FNUC.js",
         "/MyMoney/favicon.ico",
         "/MyMoney/index.html",
-        "/MyMoney/main-M5XJ4QHP.js",
+        "/MyMoney/main-DRXXEYCA.js",
         "/MyMoney/manifest.webmanifest",
         "/MyMoney/polyfills-5CFQRCPP.js",
         "/MyMoney/styles-5JZX35AC.css"
@@ -89,8 +89,8 @@
     "/MyMoney/icons/icon-512x512.png": "1de182f76f7329dfa8f9fcdd1fdcdd695bea6a99",
     "/MyMoney/icons/icon-72x72.png": "aa88a6096bd973be7f6d7a5489bfa6bc2463f8c4",
     "/MyMoney/icons/icon-96x96.png": "7fb8f59c30ce2ff12c700321a0b39e14b3dc8f95",
-    "/MyMoney/index.html": "62f2ba80084b39c1bb637753cd8a3a6f92c9e97f",
-    "/MyMoney/main-M5XJ4QHP.js": "a81f2e7ff75dee5889a027a2b72331bef963e0f4",
+    "/MyMoney/index.html": "3bbc4b15d5b24385f155348e5c74786dc6dcd4a2",
+    "/MyMoney/main-DRXXEYCA.js": "bf673511a474ccf6acebbccb194ca7cf58cbee7d",
     "/MyMoney/manifest.webmanifest": "c8d120080a19f0b85ee90283414c94869c8721a2",
     "/MyMoney/media/primeicons-4GST5W3O.woff2": "837c1279b6af9d297f34fdb43e6fcc9206a79f32",
     "/MyMoney/media/primeicons-DHQU4SEP.svg": "a07ae39027c1a780b42fd82fad7575c2924d9d28",
