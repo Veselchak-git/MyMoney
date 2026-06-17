@@ -1,3 +1,331 @@
-:host {
-  display: block;
+.filters__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.filters__item {
+  min-width: 140px;
+  flex: 1 1 auto;
+}
+
+.filters__item:nth-child(2) {
+  min-width: 160px;
+}
+
+@media (max-width: 640px) {
+  .filters__row {
+    flex-direction: column;
+  }
+
+  .filters__item {
+    width: 100%;
+  }
+}
+
+.filters__reset {
+  background: var(--color-expense);
+  border: none;
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: 0.8125rem;
+  cursor: pointer;
+  padding: 8px 14px;
+  border-radius: 8px;
+  white-space: nowrap;
+  transition: opacity 0.15s;
+
+  &:hover {
+    opacity: 0.85;
+  }
+}
+
+.tx-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--color-surface);
+  border-radius: var(--radius-card);
+  padding: 14px 16px;
+  margin-bottom: 8px;
+  margin-top: 4px;
+  box-shadow: var(--shadow-card);
+  transition: box-shadow 0.15s;
+  gap: 12px;
+}
+
+.tx-card:hover {
+  box-shadow: var(--shadow-card-hover);
+}
+
+.tx-card__left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  flex: 1;
+}
+
+.tx-card__info {
+  min-width: 0;
+}
+
+.tx-card__name {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tx-card__desc {
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tx-card__date {
+  font-size: 0.75rem;
+  color: #9CA3AF;
+  margin-top: 1px;
+}
+
+.tx-card__right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.tx-card__actions {
+  display: flex;
+  gap: 4px;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.tx-card:hover .tx-card__actions {
+  opacity: 1;
+}
+
+.tx-card__btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-size: 0.8125rem;
+  text-decoration: none;
+}
+
+.tx-card__btn--edit {
+  background: rgba(16, 185, 129, 0.08);
+  color: var(--color-primary);
+}
+
+.tx-card__btn--edit:hover {
+  background: rgba(16, 185, 129, 0.16);
+}
+
+.tx-card__btn--delete {
+  background: rgba(239, 68, 68, 0.08);
+  color: var(--color-expense);
+}
+
+.tx-card__btn--delete:hover {
+  background: rgba(239, 68, 68, 0.16);
+}
+
+@media (max-width: 640px) {
+  .tx-card__actions {
+    opacity: 1;
+  }
+
+  .tx-card {
+    padding: 12px 14px;
+    border-radius: 14px;
+  }
+
+  .tx-card__left {
+    gap: 10px;
+  }
+
+  .tx-card__name {
+    font-size: 0.875rem;
+  }
+
+  .tx-card__actions {
+    gap: 3px;
+  }
+
+  .tx-card__btn {
+    width: 30px;
+    height: 30px;
+    font-size: 0.75rem;
+  }
+}
+
+:host ::ng-deep {
+  .p-inputtext,
+  .p-datepicker .p-inputtext {
+    min-height: 40px;
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    padding: 8px 10px;
+    border: 1.5px solid var(--border-color);
+    border-radius: var(--radius-select);
+    background: var(--color-surface);
+    color: var(--color-text);
+
+    &:hover {
+      border-color: var(--border-color-hover);
+    }
+  }
+
+  .p-datepicker .p-inputtext {
+    min-height: 40px;
+  }
+
+  .p-select {
+    border: 1.5px solid var(--border-color);
+    border-radius: var(--radius-select);
+    background: var(--color-surface);
+    min-height: 40px;
+
+    &:not(.p-disabled):hover {
+      border-color: var(--border-color-hover);
+    }
+
+    &:not(.p-disabled).p-focus {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.12);
+    }
+  }
+
+  .p-select-label {
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    padding: 8px 10px;
+    color: var(--color-text);
+
+    &.p-placeholder {
+      color: var(--text-placeholder);
+    }
+  }
+
+  .p-select-dropdown {
+    width: 32px;
+    color: var(--text-placeholder);
+  }
+
+  .p-select-overlay {
+    background: var(--color-surface);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-select);
+    border-radius: var(--radius-select);
+    padding: 6px;
+    overflow: hidden;
+  }
+
+  .p-select-list {
+    list-style: none;
+    margin: 0;
+    padding: 0px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    background: var(--surface-hover);
+    border-radius: 6px;
+  }
+
+  .p-datepicker-calendar {
+    background: var(--color-surface);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-select);
+    border-radius: var(--radius-select);
+    padding: 8px;
+  }
+
+  .p-datepicker-header {
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    color: var(--color-text);
+    background: transparent;
+    border-bottom: 1px solid var(--border-color);
+    padding: 6px 0 10px;
+    margin-bottom: 4px;
+  }
+
+  .p-datepicker-title {
+    font-weight: 600;
+  }
+
+  .p-datepicker-weeknumber,
+  .p-datepicker-weekday {
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    color: var(--text-placeholder);
+    padding: 4px 0;
+  }
+
+  .p-datepicker-day {
+    font-family: var(--font-body);
+    font-size: 0.8125rem;
+    padding: 4px;
+    border-radius: 6px;
+    transition: background 0.1s;
+
+    &:hover {
+      background: var(--surface-hover);
+    }
+
+    &.p-datepicker-day-selected {
+      background: var(--surface-selected);
+      color: var(--color-primary-dark);
+      font-weight: 600;
+    }
+  }
+
+  .p-datepicker-today {
+    background: var(--surface-hover);
+    font-weight: 600;
+  }
+
+  .p-datepicker-prev-button,
+  .p-datepicker-next-button {
+    color: var(--text-placeholder);
+    transition: color 0.1s;
+
+    &:hover {
+      color: var(--color-text);
+    }
+  }
+
+  .p-select-option {
+    font-family: var(--font-body);
+    font-size: 0.8125rem;
+    padding: 8px 10px;
+    color: var(--color-text);
+    border-radius: 6px;
+    cursor: pointer;
+    list-style: none;
+    transition: background 0.1s;
+
+    &:hover {
+      background: var(--surface-hover);
+    }
+
+    &.p-select-option-selected {
+      background: var(--surface-selected);
+      color: var(--color-primary-dark);
+      font-weight: 600;
+    }
+  }
 }

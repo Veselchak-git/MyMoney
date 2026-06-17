@@ -1,123 +1,121 @@
-<div class="max-w-7xl mx-auto p-4 space-y-6">
-  <h1 class="text-2xl font-bold text-gray-800">Главная</h1>
-
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-    <p-card class="[&_.p-card-body]:!p-4">
-      <div class="flex items-center gap-3">
-        <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-          <i class="pi pi-wallet text-primary text-xl"></i>
+<div class="page">
+  <div class="slide-up">
+    <div class="balance-card" [class.balance-card--negative]="balance() < 0">
+      <div class="balance-card__icon">
+        <i class="pi pi-wallet"></i>
+      </div>
+      <div class="balance-card__label">Общий баланс</div>
+      <div class="balance-card__amount">{{ formatAmount(balance()) }}</div>
+      <div class="balance-card__period">Текущий месяц</div>
+      <div class="balance-card__stats">
+        <div class="balance-card__stat">
+          <span class="balance-card__stat-label">Доходы</span>
+          <span class="balance-card__stat-value balance-card__stat-value--income">{{ formatAmount(monthIncome()) }}</span>
         </div>
-        <div>
-          <div class="text-sm text-gray-500">Баланс</div>
-          <div class="text-xl font-bold" [class.text-primary]="balance() >= 0" [class.text-red-500]="balance() < 0">
-            {{ formatAmount(balance()) }}
-          </div>
+        <div class="balance-card__stat">
+          <span class="balance-card__stat-label">Расходы</span>
+          <span class="balance-card__stat-value balance-card__stat-value--expense">{{ formatAmount(monthExpense()) }}</span>
         </div>
       </div>
-    </p-card>
-
-    <p-card class="[&_.p-card-body]:!p-4">
-      <div class="flex items-center gap-3">
-        <div class="w-12 h-12 rounded-full bg-green-50 flex items-center justify-center">
-          <i class="pi pi-arrow-up text-income text-xl"></i>
-        </div>
-        <div>
-          <div class="text-sm text-gray-500">Доходы</div>
-          <div class="text-xl font-bold text-income">{{ formatAmount(income()) }}</div>
-        </div>
-      </div>
-    </p-card>
-
-    <p-card class="[&_.p-card-body]:!p-4">
-      <div class="flex items-center gap-3">
-        <div class="w-12 h-12 rounded-full bg-red-50 flex items-center justify-center">
-          <i class="pi pi-arrow-down text-expense text-xl"></i>
-        </div>
-        <div>
-          <div class="text-sm text-gray-500">Расходы</div>
-          <div class="text-xl font-bold text-expense">{{ formatAmount(expense()) }}</div>
-        </div>
-      </div>
-    </p-card>
+    </div>
   </div>
 
-  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-    <p-card header="Транзакции за месяц">
-      <div class="flex justify-between items-center mb-4">
-        <div>
-          <span class="text-sm text-gray-500">Доходы: </span>
-          <span class="font-semibold text-income">{{ formatAmount(monthIncome()) }}</span>
-          <span class="mx-2 text-gray-300">|</span>
-          <span class="text-sm text-gray-500">Расходы: </span>
-          <span class="font-semibold text-expense">{{ formatAmount(monthExpense()) }}</span>
-        </div>
-        <a routerLink="/transactions" class="text-sm text-primary no-underline hover:underline">Все →</a>
-      </div>
-
-      @if (recentTransactions().length === 0) {
-        <div class="text-center py-8 text-gray-400">
-          <i class="pi pi-inbox text-3xl block mb-2"></i>
-          <span class="text-sm">Пока нет транзакций</span>
-        </div>
-      }
-
-      @for (tx of recentTransactions(); track tx.id) {
-        <div class="flex items-center justify-between py-3 border-b border-gray-100 last:border-b-0">
-          <div class="flex items-center gap-3">
-            <div
-              class="w-10 h-10 rounded-full flex items-center justify-center text-sm"
-              [class.bg-green-50]="tx.type === 'income'"
-              [class.bg-red-50]="tx.type === 'expense'"
-            >
-              <i
-                [class]="categoryMap().get(tx.categoryId)?.icon || 'pi pi-question'"
-                [class.text-income]="tx.type === 'income'"
-                [class.text-expense]="tx.type === 'expense'"
-                class="text-sm"
-              ></i>
-            </div>
-            <div>
-              <div class="text-sm font-medium">{{ categoryMap().get(tx.categoryId)?.name || 'Без категории' }}</div>
-              <div class="text-xs text-gray-400">{{ tx.description || formatShortDate(tx.date) }}</div>
-            </div>
-          </div>
-          <span
-            class="font-semibold text-sm"
-            [class.text-income]="tx.type === 'income'"
-            [class.text-expense]="tx.type === 'expense'"
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+    <div class="card fade-in stagger-1">
+      <h3 class="font-display font-semibold text-lg mb-3" style="text-align:center">{{ periodLabel() }}</h3>
+      <div class="period-tabs">
+        @for (opt of periodOptions; track opt) {
+          <button
+            type="button"
+            class="period-tab"
+            [class.period-tab--active]="selectedPeriod() === opt"
+            (click)="selectedPeriod.set(opt)"
           >
-            {{ tx.type === 'income' ? '+' : '-' }}{{ formatAmount(tx.amount) }}
-          </span>
+            {{ opt === 'day' ? '1д' : opt === 'week' ? '1н' : opt === 'month' ? '1м' : opt === 'year' ? '1г' : 'Всё' }}
+          </button>
+        }
+      </div>
+      <div class="summary-row" style="margin-top: 14px;">
+        <div class="summary-row__item">
+          <div class="card-icon card-icon--income">
+            <i class="pi pi-arrow-up text-sm"></i>
+          </div>
+          <div>
+            <div class="summary-row__label">Доходы</div>
+            <div class="amount amount--income">{{ formatAmount(income()) }}</div>
+          </div>
         </div>
-      }
-    </p-card>
+        <div class="summary-row__divider"></div>
+        <div class="summary-row__item">
+          <div class="card-icon card-icon--expense">
+            <i class="pi pi-arrow-down text-sm"></i>
+          </div>
+          <div>
+            <div class="summary-row__label">Расходы</div>
+            <div class="amount amount--expense">{{ formatAmount(expense()) }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-    <p-card header="Быстрые действия">
-      <div class="flex flex-col gap-3">
-        <a routerLink="/transactions/new">
-          <p-button
-            label="Добавить доход"
-            icon="pi pi-plus-circle"
-            severity="success"
-            styleClass="w-full justify-center"
-          />
+    <div class="card fade-in stagger-2">
+      <div class="flex items-center justify-between mb-3">
+        <h3 class="font-display font-semibold text-base m-0">Быстрые действия</h3>
+      </div>
+      <div class="grid grid-cols-2 gap-2">
+        <a routerLink="/transactions/new" [queryParams]="{type: 'income'}" class="action-btn action-btn--income">
+          <i class="pi pi-plus-circle"></i>
+          <span>Доход</span>
         </a>
-        <a routerLink="/transactions/new">
-          <p-button
-            label="Добавить расход"
-            icon="pi pi-minus-circle"
-            severity="danger"
-            styleClass="w-full justify-center"
-          />
+        <a routerLink="/transactions/new" [queryParams]="{type: 'expense'}" class="action-btn action-btn--expense">
+          <i class="pi pi-minus-circle"></i>
+          <span>Расход</span>
         </a>
-        <a routerLink="/analytics">
-          <p-button
-            label="Перейти к аналитике"
-            icon="pi pi-chart-line"
-            styleClass="w-full justify-center p-button-outlined"
-          />
+        <a routerLink="/categories" class="action-btn action-btn--neutral">
+          <i class="pi pi-tags"></i>
+          <span>Категории</span>
+        </a>
+        <a routerLink="/analytics" class="action-btn action-btn--neutral">
+          <i class="pi pi-chart-line"></i>
+          <span>Аналитика</span>
         </a>
       </div>
-    </p-card>
+    </div>
+  </div>
+
+  <div class="card mt-4 fade-in stagger-3">
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="font-display font-semibold text-base m-0">Последние транзакции</h3>
+      <a routerLink="/transactions" class="text-sm text-primary no-underline font-medium hover:underline">
+        Все →
+      </a>
+    </div>
+
+    @if (recentTransactions().length === 0) {
+      <div class="empty-state">
+        <i class="pi pi-inbox"></i>
+        <p>Пока нет транзакций</p>
+        <a routerLink="/transactions/new">
+          <button class="btn-primary">Добавить первую</button>
+        </a>
+      </div>
+    }
+
+    @for (tx of recentTransactions(); track tx.id) {
+      <div class="tx-row">
+        <div class="tx-row__left">
+          <div class="card-icon" [class.card-icon--income]="tx.type === 'income'" [class.card-icon--expense]="tx.type === 'expense'">
+            <i [class]="categoryMap().get(tx.categoryId)?.icon || 'pi pi-question'" class="text-sm"></i>
+          </div>
+          <div class="tx-row__info">
+            <div class="tx-row__name">{{ categoryMap().get(tx.categoryId)?.name || 'Без категории' }}</div>
+            <div class="tx-row__meta">{{ tx.description || formatShortDate(tx.date) }}</div>
+          </div>
+        </div>
+        <span class="amount text-sm" [class.amount--income]="tx.type === 'income'" [class.amount--expense]="tx.type === 'expense'">
+          {{ tx.type === 'income' ? '+' : '-' }}{{ formatAmount(tx.amount) }}
+        </span>
+      </div>
+    }
   </div>
 </div>

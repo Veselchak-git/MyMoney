@@ -1,16 +1,13 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, HostListener, inject, signal } from '@angular/core';
 import { Auth } from '@angular/fire/auth';
 import { FormsModule } from '@angular/forms';
 import { CategoryService } from '../../services';
-import { CardModule } from 'primeng/card';
-import { ButtonModule } from 'primeng/button';
+import { Category } from '../../models';
 import { InputTextModule } from 'primeng/inputtext';
-import { DialogModule } from 'primeng/dialog';
-import { SelectModule } from 'primeng/select';
 
 @Component({
   selector: 'app-categories',
-  imports: [FormsModule, CardModule, ButtonModule, InputTextModule, DialogModule, SelectModule],
+  imports: [FormsModule, InputTextModule],
   templateUrl: './categories.html',
   styleUrl: './categories.scss',
 })
@@ -22,10 +19,33 @@ export class Categories {
 
   readonly showDialog = signal(false);
   readonly editingId = signal<string | null>(null);
+  readonly iconOpen = signal(false);
+  readonly incomeOpen = signal(true);
+  readonly expenseOpen = signal(true);
   name = '';
   icon = 'pi pi-tag';
   type: 'income' | 'expense' = 'expense';
   loading = signal(false);
+
+  get iconLabel(): string {
+    return this.icons.find(i => i.value === this.icon)?.label ?? 'Иконка';
+  }
+
+  toggleIcons(): void {
+    this.iconOpen.update(v => !v);
+  }
+
+  selectIcon(value: string): void {
+    this.icon = value;
+    this.iconOpen.set(false);
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocClick(e: Event): void {
+    if (!(e.target as HTMLElement).closest('.icon-picker')) {
+      this.iconOpen.set(false);
+    }
+  }
 
   readonly icons = [
     { label: 'Кошелёк', value: 'pi pi-wallet' },
@@ -56,7 +76,7 @@ export class Categories {
     this.showDialog.set(true);
   }
 
-  openEdit(cat: any): void {
+  openEdit(cat: Category): void {
     this.editingId.set(cat.id);
     this.name = cat.name;
     this.icon = cat.icon;
@@ -66,8 +86,9 @@ export class Categories {
 
   async save(): Promise<void> {
     if (!this.name) return;
+    const user = this.auth.currentUser;
+    if (!user) return;
     this.loading.set(true);
-    const user = this.auth.currentUser!;
 
     try {
       if (this.editingId()) {
@@ -91,7 +112,19 @@ export class Categories {
     }
   }
 
+  closeDialog(): void {
+    this.showDialog.set(false);
+    this.iconOpen.set(false);
+    this.name = '';
+    this.icon = 'pi pi-tag';
+  }
+
   async delete(id: string): Promise<void> {
-    await this.categoryService.delete(id);
+    if (!confirm('Удалить категорию?')) return;
+    try {
+      await this.categoryService.delete(id);
+    } catch {
+      console.error('Failed to delete category');
+    }
   }
 }

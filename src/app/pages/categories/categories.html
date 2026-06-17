@@ -1,110 +1,146 @@
-<div class="max-w-7xl mx-auto p-4 space-y-6">
-  <h1 class="text-2xl font-bold text-gray-800">Категории</h1>
+<div class="page">
+  <h1 class="page-title">Категории</h1>
 
-  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-    <p-card header="Доходы">
-      <div class="flex flex-col gap-2">
-        @for (cat of categories(); track cat.id) {
-          @if (cat.type === 'income' || cat.type === 'both') {
-            <div class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50">
-              <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-full bg-green-50 flex items-center justify-center">
-                  <i [class]="cat.icon" class="text-income text-sm"></i>
-                </div>
-                <span class="font-medium">{{ cat.name }}</span>
-                @if (cat.isDefault) {
-                  <span class="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded">По умолчанию</span>
-                }
-              </div>
-              <div class="flex gap-1">
-                <p-button icon="pi pi-pencil" [rounded]="true" [text]="true" severity="secondary" (click)="openEdit(cat)" />
-                @if (!cat.isDefault) {
-                  <p-button icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger" (click)="delete(cat.id)" />
-                }
-              </div>
-            </div>
-          }
-        }
-        <p-button
-          label="Добавить доход"
-          icon="pi pi-plus"
-          severity="success"
-          styleClass="p-button-outlined mt-2"
-          (click)="openCreate('income')"
-        />
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+    <div class="card">
+      <div class="flex items-center justify-between mb-3">
+        <h3 class="font-display font-semibold text-base m-0">Доходы</h3>
+        <button type="button" class="cat-toggle" (click)="incomeOpen.set(!incomeOpen())">
+          <i class="pi pi-chevron-down" [class.cat-toggle__icon--open]="incomeOpen()"></i>
+        </button>
       </div>
-    </p-card>
+      <button (click)="openCreate('income')" class="cat-add-btn mb-2">
+        <i class="pi pi-plus"></i>
+        Добавить доход
+      </button>
+      @if (incomeOpen()) {
+        <div class="cat-list">
+          @for (cat of categories(); track cat.id) {
+            @if (cat.type === 'income' || cat.type === 'both') {
+              <div class="cat-row">
+                <div class="cat-row__left">
+                  <div class="card-icon card-icon--income">
+                    <i [class]="cat.icon" class="text-sm"></i>
+                  </div>
+                  <span class="cat-row__name">{{ cat.name }}</span>
+                  @if (cat.isDefault) {
+                    <span class="cat-badge">По умолчанию</span>
+                  }
+                </div>
+                <div class="cat-row__actions">
+                  <button (click)="openEdit(cat)" class="cat-btn cat-btn--edit" aria-label="Редактировать">
+                    <i class="pi pi-pencil"></i>
+                  </button>
+                  @if (!cat.isDefault) {
+                    <button (click)="delete(cat.id)" class="cat-btn cat-btn--delete" aria-label="Удалить">
+                      <i class="pi pi-trash"></i>
+                    </button>
+                  }
+                </div>
+              </div>
+            }
+          }
+        </div>
+      }
+    </div>
 
-    <p-card header="Расходы">
-      <div class="flex flex-col gap-2">
-        @for (cat of categories(); track cat.id) {
-          @if (cat.type === 'expense' || cat.type === 'both') {
-            <div class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50">
-              <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-full bg-red-50 flex items-center justify-center">
-                  <i [class]="cat.icon" class="text-expense text-sm"></i>
-                </div>
-                <span class="font-medium">{{ cat.name }}</span>
-                @if (cat.isDefault) {
-                  <span class="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded">По умолчанию</span>
-                }
-              </div>
-              <div class="flex gap-1">
-                <p-button icon="pi pi-pencil" [rounded]="true" [text]="true" severity="secondary" (click)="openEdit(cat)" />
-                @if (!cat.isDefault) {
-                  <p-button icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger" (click)="delete(cat.id)" />
-                }
-              </div>
-            </div>
-          }
-        }
-        <p-button
-          label="Добавить расход"
-          icon="pi pi-plus"
-          severity="danger"
-          styleClass="p-button-outlined mt-2"
-          (click)="openCreate('expense')"
-        />
+    <div class="card">
+      <div class="flex items-center justify-between mb-3">
+        <h3 class="font-display font-semibold text-base m-0">Расходы</h3>
+        <button type="button" class="cat-toggle" (click)="expenseOpen.set(!expenseOpen())">
+          <i class="pi pi-chevron-down" [class.cat-toggle__icon--open]="expenseOpen()"></i>
+        </button>
       </div>
-    </p-card>
+      <button (click)="openCreate('expense')" class="cat-add-btn cat-add-btn--danger mb-2">
+        <i class="pi pi-plus"></i>
+        Добавить расход
+      </button>
+      @if (expenseOpen()) {
+        <div class="cat-list">
+          @for (cat of categories(); track cat.id) {
+            @if (cat.type === 'expense' || cat.type === 'both') {
+              <div class="cat-row">
+                <div class="cat-row__left">
+                  <div class="card-icon card-icon--expense">
+                    <i [class]="cat.icon" class="text-sm"></i>
+                  </div>
+                  <span class="cat-row__name">{{ cat.name }}</span>
+                  @if (cat.isDefault) {
+                    <span class="cat-badge">По умолчанию</span>
+                  }
+                </div>
+                <div class="cat-row__actions">
+                  <button (click)="openEdit(cat)" class="cat-btn cat-btn--edit" aria-label="Редактировать">
+                    <i class="pi pi-pencil"></i>
+                  </button>
+                  @if (!cat.isDefault) {
+                    <button (click)="delete(cat.id)" class="cat-btn cat-btn--delete" aria-label="Удалить">
+                      <i class="pi pi-trash"></i>
+                    </button>
+                  }
+                </div>
+              </div>
+            }
+          }
+        </div>
+      }
+    </div>
   </div>
 
-  <p-dialog
-    [(visible)]="showDialog"
-    [header]="editingId() ? 'Редактировать категорию' : 'Новая категория'"
-    [modal]="true"
-    [style]="{ width: '400px' }"
-  >
-    <div class="flex flex-col gap-4">
-      <input
-        pInputText
-        [(ngModel)]="name"
-        placeholder="Название"
-        class="w-full"
-      />
+  @if (showDialog()) {
+    <div class="dialog-mask" (click)="closeDialog()">
+      <div class="dialog-panel" (click)="$event.stopPropagation()">
+        <div class="dialog-header">
+          <span>{{ editingId() ? 'Редактировать категорию' : 'Новая категория' }}</span>
+          <button type="button" class="dialog-close" (click)="closeDialog()">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M8.01186 7.00933L12.27 2.75116C12.341 2.68501 12.398 2.60524 12.4375 2.51661C12.4769 2.42798 12.4982 2.3323 12.4999 2.23529C12.5016 2.13827 12.4838 2.0419 12.4474 1.95194C12.4111 1.86197 12.357 1.78024 12.2884 1.71163C12.2198 1.64302 12.138 1.58893 12.0481 1.55259C11.9581 1.51625 11.8617 1.4984 11.7647 1.50011C11.6677 1.50182 11.572 1.52306 11.4834 1.56255C11.3948 1.60204 11.315 1.65898 11.2488 1.72997L6.99067 5.98814L2.7325 1.72997C2.59553 1.60234 2.41437 1.53286 2.22718 1.53616C2.03999 1.53946 1.8614 1.61529 1.72901 1.74767C1.59663 1.88006 1.5208 2.05865 1.5175 2.24584C1.5142 2.43303 1.58368 2.61419 1.71131 2.75116L5.96948 7.00933L1.71131 11.2675C1.576 11.403 1.5 11.5866 1.5 11.7781C1.5 11.9696 1.576 12.1532 1.71131 12.2887C1.84679 12.424 2.03043 12.5 2.2219 12.5C2.41338 12.5 2.59702 12.424 2.7325 12.2887L6.99067 8.03052L11.2488 12.2887C11.3843 12.424 11.568 12.5 11.7594 12.5C11.9509 12.5 12.1346 12.424 12.27 12.2887C12.4053 12.1532 12.4813 11.9696 12.4813 11.7781C12.4813 11.5866 12.4053 11.403 12.27 11.2675L8.01186 7.00933Z" fill="currentColor"/>
+            </svg>
+          </button>
+        </div>
+        <div class="dialog-body">
+          <input
+            pInputText
+            [(ngModel)]="name"
+            placeholder="Название"
+            class="w-full"
+          />
 
-      <p-select
-        [(ngModel)]="icon"
-        [options]="icons"
-        optionLabel="label"
-        optionValue="value"
-        placeholder="Иконка"
-        class="w-full"
-      >
-        <ng-template pTemplate="item" let-item>
-          <div class="flex items-center gap-2">
-            <i [class]="item.value" class="text-sm"></i>
-            <span>{{ item.label }}</span>
+          <div class="icon-picker">
+            <button type="button" class="icon-picker__trigger" (click)="toggleIcons()">
+              <i [class]="icon" class="text-sm"></i>
+              <span>Выберите картинку</span>
+              <i class="pi pi-chevron-down icon-picker__arrow"></i>
+            </button>
+            @if (iconOpen()) {
+              <div class="icon-picker__dropdown">
+                @for (item of icons; track item.value) {
+                  <button
+                    type="button"
+                    class="icon-picker__option"
+                    [class.icon-picker__option--selected]="item.value === icon"
+                    (click)="selectIcon(item.value)"
+                  >
+                    <i [class]="item.value" class="text-sm"></i>
+                    <span>{{ item.label }}</span>
+                  </button>
+                }
+              </div>
+            }
           </div>
-        </ng-template>
-      </p-select>
 
-      <p-button
-        (click)="save()"
-        label="Сохранить"
-        [loading]="loading()"
-        [disabled]="!name"
-      />
+          <button
+            class="btn-primary w-full justify-center"
+            (click)="save()"
+            [disabled]="!name || loading()"
+          >
+            @if (loading()) {
+              <span class="btn__spinner"></span>
+            }
+            Сохранить
+          </button>
+        </div>
+      </div>
     </div>
-  </p-dialog>
+  }
 </div>

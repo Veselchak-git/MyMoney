@@ -1,1 +1,1 @@
-export { formatAmount, formatDate, formatShortDate } from './format';
+export { formatAmount, formatShortDate } from './format';

@@ -1,12 +1,12 @@
 import { Component, inject, computed } from '@angular/core';
 import { TransactionService, CategoryService, AnalyticsService } from '../../services';
 import { formatAmount } from '../../utils';
-import { CardModule } from 'primeng/card';
 import { ChartModule } from 'primeng/chart';
+import type { ChartOptions } from 'chart.js';
 
 @Component({
   selector: 'app-analytics',
-  imports: [CardModule, ChartModule],
+  imports: [ChartModule],
   templateUrl: './analytics.html',
   styleUrl: './analytics.scss',
 })
@@ -18,24 +18,21 @@ export class Analytics {
   readonly transactions = this.transactionService.transactions;
   readonly categories = this.categoryService.categories;
 
-  private get catList(): any[] { return this.categories() as any[]; }
-  private get txList(): any[] { return this.transactions() as any[]; }
-
   readonly currentMonthTx = computed(() => {
     const now = new Date();
-    return this.transactionService.getByMonth(now.getFullYear(), now.getMonth() + 1) as any[];
+    return this.transactionService.getByMonth(now.getFullYear(), now.getMonth() + 1);
   });
 
   readonly expenseBreakdown = computed(() =>
-    this.analyticsService.getByCategory(this.currentMonthTx(), this.catList as any, 'expense')
+    this.analyticsService.getByCategory(this.currentMonthTx(), this.categories(), 'expense')
   );
 
   readonly incomeBreakdown = computed(() =>
-    this.analyticsService.getByCategory(this.currentMonthTx(), this.catList as any, 'income')
+    this.analyticsService.getByCategory(this.currentMonthTx(), this.categories(), 'income')
   );
 
   readonly monthlyTotals = computed(() =>
-    this.analyticsService.getMonthlyTotals(this.txList as any, 6)
+    this.analyticsService.getMonthlyTotals(this.transactions(), 6)
   );
 
   readonly pieChartData = computed(() => ({
@@ -50,9 +47,9 @@ export class Analytics {
     }],
   }));
 
-  readonly chartOptions: any = {
+  readonly chartOptions: ChartOptions<'pie'> = {
     plugins: {
-      legend: { position: 'right' as const, labels: { font: { size: 12 } } },
+      legend: { position: 'right', labels: { font: { size: 12 } } },
     },
     responsive: true,
     maintainAspectRatio: false,
@@ -76,15 +73,15 @@ export class Analytics {
     ],
   }));
 
-  readonly barOptions: any = {
+  readonly barOptions: ChartOptions<'bar'> = {
     plugins: {
-      legend: { position: 'top' as const, labels: { font: { size: 12 } } },
+      legend: { position: 'top', labels: { font: { size: 12 } } },
     },
     responsive: true,
     maintainAspectRatio: false,
     scales: {
       x: { grid: { display: false } },
-      y: { beginAtZero: true, ticks: { callback: (v: number) => formatAmount(v) } },
+      y: { beginAtZero: true, ticks: { callback: (v: number | string) => formatAmount(Number(v)) } },
     },
   };
 
@@ -105,9 +102,9 @@ export class Analytics {
     };
   });
 
-  readonly lineOptions: any = {
+  readonly lineOptions: ChartOptions<'line'> = {
     plugins: {
-      legend: { position: 'top' as const, labels: { font: { size: 12 } } },
+      legend: { position: 'top', labels: { font: { size: 12 } } },
     },
     responsive: true,
     maintainAspectRatio: false,
@@ -115,7 +112,7 @@ export class Analytics {
       x: { grid: { display: false } },
       y: {
         beginAtZero: true,
-        ticks: { callback: (v: number) => formatAmount(v) },
+        ticks: { callback: (v: number | string) => formatAmount(Number(v)) },
       },
     },
   };

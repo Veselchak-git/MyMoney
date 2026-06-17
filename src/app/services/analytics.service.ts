@@ -1,4 +1,4 @@
-import { Injectable, computed } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Transaction, Category } from '../models';
 
 @Injectable({ providedIn: 'root' })
@@ -19,7 +19,7 @@ export class AnalyticsService {
 
     return Array.from(byCategory.entries())
       .map(([id, amount]) => ({
-        category: catMap.get(id) ?? { id, name: 'Без категории', icon: 'pi pi-question' } as Category,
+        category: catMap.get(id) ?? { id, name: 'Без категории', icon: 'pi pi-question', type: 'expense', userId: '', isDefault: false, budget: undefined } as Category,
         amount,
         percentage: total > 0 ? Math.round((amount / total) * 100) : 0,
       }))
@@ -42,7 +42,7 @@ export class AnalyticsService {
       const end = new Date(year, month + 1, 1);
 
       const monthTx = transactions.filter(t => {
-        const td = (t.date as any).toDate();
+        const td = t.date.toDate();
         return td >= start && td < end;
       });
 

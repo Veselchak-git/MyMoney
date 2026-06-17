@@ -1,3 +1,343 @@
-:host {
-  display: block;
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  label {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+  }
+
+  textarea {
+    max-height: 120px;
+    min-height: 80px;
+    resize: vertical;
+    overflow-y: auto;
+  }
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.type-toggle {
+  display: flex;
+  gap: 8px;
+
+  button {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 16px;
+    border: 1.5px solid #E5E7EB;
+    border-radius: 10px;
+    background: transparent;
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    transition: all 0.15s;
+
+    &:hover {
+      border-color: #D1D5DB;
+      background: #F9FAFB;
+    }
+
+    &.type-toggle__btn--expense {
+      &.type-toggle__btn--active {
+        background: #EF4444;
+        color: white;
+        border-color: #EF4444;
+      }
+    }
+
+    &.type-toggle__btn--income {
+      &.type-toggle__btn--active {
+        background: #10B981;
+        color: white;
+        border-color: #10B981;
+      }
+    }
+  }
+}
+
+.form-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  padding-top: 8px;
+
+  button {
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    font-weight: 600;
+    padding: 10px 20px;
+    border-radius: 10px;
+    border: 1.5px solid #E5E7EB;
+    background: transparent;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    transition: all 0.15s;
+
+    &:hover {
+      border-color: #D1D5DB;
+      background: #F9FAFB;
+    }
+
+    &.btn-primary {
+      --btn-bg: var(--color-primary);
+      --btn-color: white;
+      background: var(--btn-bg);
+      border-color: var(--btn-bg);
+      color: var(--btn-color);
+
+      &:hover {
+        background: var(--color-primary-dark);
+        border-color: var(--color-primary-dark);
+      }
+
+      &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+    }
+  }
+}
+
+.loading {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  padding: 10px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  &::before {
+    content: '';
+    width: 14px;
+    height: 14px;
+    border: 2px solid #E5E7EB;
+    border-top-color: var(--color-primary);
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+  }
+}
+
+.error {
+  font-size: 0.875rem;
+  color: var(--color-expense);
+  padding: 10px 0;
+}
+
+.spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  margin-right: 6px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (max-width: 640px) {
+  form {
+    gap: 16px;
+  }
+
+  .type-toggle button {
+    padding: 8px 12px;
+    font-size: 0.8125rem;
+  }
+
+  .form-actions {
+    flex-direction: column-reverse;
+
+    button {
+      width: 100%;
+      text-align: center;
+    }
+  }
+}
+
+:host ::ng-deep {
+  @media (max-width: 640px) {
+    .p-select {
+      min-height: 40px;
+    }
+
+    .p-select-label {
+      font-size: 0.8125rem;
+      padding: 6px 10px;
+    }
+
+    .p-select-dropdown {
+      width: 32px;
+    }
+  }
+}
+
+:host ::ng-deep {
+  .p-select {
+    border: 1.5px solid var(--border-color);
+    border-radius: var(--radius-select);
+    background: var(--color-surface);
+    min-height: 42px;
+
+    &:not(.p-disabled):hover {
+      border-color: var(--border-color-hover);
+    }
+
+    &:not(.p-disabled).p-focus {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.12);
+    }
+  }
+
+  .p-select-label {
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    padding: 8px 12px;
+    color: var(--color-text);
+
+    &.p-placeholder {
+      color: var(--text-placeholder);
+    }
+  }
+
+  .p-select-dropdown {
+    width: 36px;
+    color: var(--text-placeholder);
+  }
+
+  .p-select-overlay {
+    position: relative;
+    top: auto;
+    left: auto;
+    width: 100%;
+    margin-top: 4px;
+    background: var(--color-surface);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-select);
+    border-radius: var(--radius-select);
+    padding: 8px;
+    overflow: hidden;
+  }
+
+  .p-select-list-container {
+    max-height: 280px;
+  }
+
+  .p-select-list {
+    list-style: none;
+    margin: 0;
+    padding: 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    background: var(--surface-hover);
+    border-radius: 6px;
+  }
+
+  .p-datepicker-calendar {
+    background: var(--color-surface);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-select);
+    border-radius: var(--radius-select);
+    padding: 8px;
+  }
+
+  .p-datepicker-header {
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    color: var(--color-text);
+    background: transparent;
+    border-bottom: 1px solid var(--border-color);
+    padding: 6px 0 10px;
+    margin-bottom: 4px;
+  }
+
+  .p-datepicker-title {
+    font-weight: 600;
+  }
+
+  .p-datepicker-weekday {
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    color: var(--text-placeholder);
+    padding: 4px 0;
+  }
+
+  .p-datepicker-day {
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    padding: 6px;
+    border-radius: 8px;
+    transition: background 0.1s;
+
+    &:hover {
+      background: var(--surface-hover);
+    }
+
+    &.p-datepicker-day-selected {
+      background: var(--surface-selected);
+      color: var(--color-primary-dark);
+      font-weight: 600;
+    }
+  }
+
+  .p-datepicker-today {
+    background: var(--surface-hover);
+    font-weight: 600;
+  }
+
+  .p-datepicker-prev-button,
+  .p-datepicker-next-button {
+    color: var(--text-placeholder);
+    transition: color 0.1s;
+
+    &:hover {
+      color: var(--color-text);
+    }
+  }
+
+  .p-select-option {
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    padding: 10px 12px;
+    color: var(--color-text);
+    border-radius: 8px;
+    cursor: pointer;
+    list-style: none;
+    transition: background 0.1s;
+
+    &:hover {
+      background: var(--surface-hover);
+    }
+
+    &.p-select-option-selected {
+      background: var(--surface-selected);
+      color: var(--color-primary-dark);
+      font-weight: 600;
+    }
+  }
+
+  .p-select-empty-message {
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    padding: 10px 14px;
+    color: var(--color-text-muted);
+  }
+
+
 }

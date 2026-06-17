@@ -1,100 +1,89 @@
-<div class="max-w-7xl mx-auto p-4 space-y-6">
-  <div class="flex items-center justify-between">
-    <h1 class="text-2xl font-bold text-gray-800">Транзакции</h1>
-    <a routerLink="/transactions/new">
-      <p-button label="Добавить" icon="pi pi-plus" />
+<div class="page">
+  <div class="flex items-center justify-between mb-4">
+    <h1 class="page-title m-0">Транзакции</h1>
+    <a routerLink="/transactions/new" style="text-decoration: none">
+      <button class="btn-primary flex items-center gap-2 text-sm">
+        <i class="pi pi-plus text-xs"></i>
+        Добавить
+      </button>
     </a>
   </div>
 
-  <p-card>
-    <div class="flex flex-wrap gap-3">
+  <div class="filters card">
+    <div class="filters__row">
       <p-select
-        [options]="[{ label: 'Все', value: 'all' }, { label: 'Доходы', value: 'income' }, { label: 'Расходы', value: 'expense' }]"
-        [(ngModel)]="filterType"
+        [options]="filterTypeOptions"
+        [ngModel]="filterType()"
+        (ngModelChange)="filterType.set($event)"
         optionLabel="label"
         optionValue="value"
         placeholder="Тип"
-        class="w-40"
+        class="filters__item"
       />
 
       <p-select
         [options]="categories()"
-        [(ngModel)]="filterCategory"
+        [ngModel]="filterCategory()"
+        (ngModelChange)="filterCategory.set($event ?? '')"
         optionLabel="name"
         optionValue="id"
         placeholder="Категория"
-        class="w-48"
-        [showClear]="true"
+        class="filters__item"
       />
 
       <input
         pInputText
         type="text"
         placeholder="Поиск..."
-        [(ngModel)]="searchText"
-        class="w-48"
+        [ngModel]="searchText()"
+        (ngModelChange)="searchText.set($event)"
+        class="filters__item"
       />
 
-      <p-datePicker
-        [(ngModel)]="filterDate"
+      <p-datepicker
+        [ngModel]="filterDate()"
+        (ngModelChange)="filterDate.set($event ?? undefined)"
         placeholder="Дата"
         dateFormat="dd.mm.yy"
-        [showClear]="true"
+        class="filters__item"
       />
+
+      <button (click)="resetFilters()" class="filters__reset">Сбросить</button>
     </div>
-  </p-card>
+  </div>
 
   @if (filteredTransactions().length === 0) {
-    <div class="text-center py-16 text-gray-400">
-      <i class="pi pi-inbox text-5xl block mb-4"></i>
-      <p class="text-lg">Транзакции не найдены</p>
+    <div class="empty-state mt-6">
+      <i class="pi pi-inbox"></i>
+      <p>Транзакции не найдены</p>
     </div>
   }
 
   @for (tx of filteredTransactions(); track tx.id) {
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 flex items-center justify-between hover:shadow-md transition-shadow">
-      <div class="flex items-center gap-4">
-        <div
-          class="w-12 h-12 rounded-full flex items-center justify-center"
-          [class.bg-green-50]="tx.type === 'income'"
-          [class.bg-red-50]="tx.type === 'expense'"
-        >
-          <i
-            [class]="categoryMap().get(tx.categoryId)?.icon || 'pi pi-question'"
-            [class.text-income]="tx.type === 'income'"
-            [class.text-expense]="tx.type === 'expense'"
-          ></i>
+    <div class="tx-card slide-up">
+      <div class="tx-card__left">
+        <div class="card-icon" [class.card-icon--income]="tx.type === 'income'" [class.card-icon--expense]="tx.type === 'expense'">
+          <i [class]="categoryMap().get(tx.categoryId)?.icon || 'pi pi-question'" class="text-sm"></i>
         </div>
-
-        <div>
-          <div class="font-medium">{{ categoryMap().get(tx.categoryId)?.name || 'Без категории' }}</div>
+        <div class="tx-card__info">
+          <div class="tx-card__name">{{ categoryMap().get(tx.categoryId)?.name || 'Без категории' }}</div>
           @if (tx.description) {
-            <div class="text-sm text-gray-400">{{ tx.description }}</div>
+            <div class="tx-card__desc">{{ tx.description }}</div>
           }
-          <div class="text-xs text-gray-300">{{ formatShortDate(tx.date) }}</div>
+          <div class="tx-card__date">{{ formatShortDate(tx.date) }}</div>
         </div>
       </div>
-
-      <div class="flex items-center gap-3">
-        <span
-          class="font-bold"
-          [class.text-income]="tx.type === 'income'"
-          [class.text-expense]="tx.type === 'expense'"
-        >
+      <div class="tx-card__right">
+        <span class="amount" [class.amount--income]="tx.type === 'income'" [class.amount--expense]="tx.type === 'expense'">
           {{ tx.type === 'income' ? '+' : '-' }}{{ formatAmount(tx.amount) }}
         </span>
-
-        <div class="flex gap-1">
-          <a [routerLink]="['/transactions', tx.id, 'edit']">
-            <p-button icon="pi pi-pencil" [rounded]="true" [text]="true" severity="secondary" />
+        <div class="tx-card__actions">
+          <a [routerLink]="['/transactions', tx.id, 'edit']" class="tx-card__btn tx-card__btn--edit" aria-label="Редактировать">
+            <i class="pi pi-pencil"></i>
           </a>
-          <p-button
-            icon="pi pi-trash"
-            [rounded]="true"
-            [text]="true"
-            severity="danger"
-            (click)="deleteTransaction(tx.id)"
-          />
+          <button (click)="deleteTransaction(tx.id)" class="tx-card__btn tx-card__btn--delete" aria-label="Удалить">
+            <i class="pi pi-trash"></i>
+          </button>
         </div>
       </div>
     </div>
