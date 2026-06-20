@@ -4,6 +4,7 @@
   align-items: center;
   justify-content: center;
   padding: 24px 16px;
+  padding: max(24px, env(safe-area-inset-top)) 16px 24px 16px;
   background: #ffffff;
 }
 
@@ -64,6 +65,80 @@
   flex-shrink: 0;
 }
 
+.auth-verify-banner {
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.auth-verify-banner__content {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 0.8125rem;
+  color: #374151;
+  line-height: 1.4;
+}
+
+.auth-verify-banner__content i {
+  color: var(--color-primary);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.auth-verify-banner__actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.auth-verify-banner__resend {
+  border: none;
+  background: rgba(16, 185, 129, 0.1);
+  color: var(--color-primary);
+  font-family: var(--font-body);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 4px 10px;
+  border-radius: 6px;
+  transition: all 0.15s;
+}
+
+.auth-verify-banner__resend:hover {
+  background: rgba(16, 185, 129, 0.18);
+}
+
+.auth-reset-hint {
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+  margin: 0 0 4px;
+  line-height: 1.4;
+}
+
+.auth-forgot {
+  align-self: center;
+  border: none;
+  background: none;
+  color: var(--color-primary);
+  font-family: var(--font-body);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0;
+  margin-top: -4px;
+}
+
+.auth-forgot:hover {
+  text-decoration: underline;
+}
+
 .auth-form {
   display: flex;
   flex-direction: column;
@@ -75,7 +150,7 @@
   border-radius: 10px;
   padding: 12px 14px;
   font-size: 0.9375rem;
-  border: 1.5px solid #000000;
+  border: 1.5px solid var(--border-color);
   transition: border-color 0.15s;
   outline: none;
   font-family: var(--font-body);
@@ -88,8 +163,8 @@
 }
 
 ::ng-deep .auth-field .p-inputtext:focus {
-  border-color: #000000;
-  box-shadow: 0 0 0 2px rgba(0,0,0,0.15);
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.12);
 }
 
 .auth-btn {

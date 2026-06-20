@@ -49,7 +49,7 @@ export class Analytics {
 
   readonly chartOptions: ChartOptions<'pie'> = {
     plugins: {
-      legend: { position: 'right', labels: { font: { size: 12 } } },
+      legend: { position: 'bottom', labels: { font: { size: 11 } } },
     },
     responsive: true,
     maintainAspectRatio: false,

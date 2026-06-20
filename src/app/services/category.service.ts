@@ -100,9 +100,10 @@ export class CategoryService {
       const ref = collection(this.db, 'categories');
       const q = query(ref, where('userId', '==', user.uid));
       const snap = await getDocs(q);
-      if (!snap.empty) return;
+      const existingNames = new Set(snap.docs.map(d => d.data()['name']));
 
       for (const cat of DEFAULT_CATEGORIES) {
+        if (existingNames.has(cat.name)) continue;
         await addDoc(ref, { ...cat, userId: user.uid });
       }
     } catch (err) {

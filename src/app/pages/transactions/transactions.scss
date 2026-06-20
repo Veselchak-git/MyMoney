@@ -144,10 +144,6 @@
 }
 
 @media (max-width: 640px) {
-  .tx-card__actions {
-    opacity: 1;
-  }
-
   .tx-card {
     padding: 12px 14px;
     border-radius: 14px;
@@ -162,13 +158,14 @@
   }
 
   .tx-card__actions {
-    gap: 3px;
+    opacity: 1;
+    gap: 6px;
   }
 
   .tx-card__btn {
-    width: 30px;
-    height: 30px;
-    font-size: 0.75rem;
+    width: 44px;
+    height: 44px;
+    font-size: 0.8125rem;
   }
 }
 

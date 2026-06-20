@@ -8,56 +8,124 @@
       <p class="auth-card__subtitle">Ведите учёт доходов и расходов</p>
     </div>
 
-    @if (error()) {
-      <div class="auth-error">
-        <i class="pi pi-exclamation-circle"></i>
-        {{ error() }}
+      @if (error()) {
+        <div class="auth-error">
+          <i class="pi pi-exclamation-circle"></i>
+          {{ error() }}
+        </div>
+      }
+
+      @if (verificationSent()) {
+        <div class="auth-verify-banner">
+          <div class="auth-verify-banner__content">
+            <i class="pi pi-envelope"></i>
+            <span>Письмо отправлено на <strong>{{ email }}</strong>. Подтвердите email, чтобы использовать все возможности приложения.</span>
+          </div>
+          <div class="auth-verify-banner__actions">
+            <button type="button" class="auth-verify-banner__resend" (click)="resendVerification()">Отправить ещё</button>
+            <button type="button" class="auth-verify-banner__resend" (click)="checkVerification()">Проверить</button>
+          </div>
+        </div>
+      }
+
+      @if (loginNotVerified()) {
+        <div class="auth-verify-banner">
+          <div class="auth-verify-banner__content">
+            <i class="pi pi-exclamation-triangle"></i>
+            <span>Email <strong>{{ email }}</strong> не подтверждён. Проверьте почту и нажмите на ссылку в письме.</span>
+          </div>
+          <div class="auth-verify-banner__actions">
+            <button type="button" class="auth-verify-banner__resend" (click)="resendVerification()">Отправить ещё</button>
+            <button type="button" class="auth-verify-banner__resend" (click)="checkVerification()">Проверить</button>
+            <button type="button" class="auth-verify-banner__resend" (click)="toggleMode()">Новый аккаунт</button>
+          </div>
+        </div>
+      }
+
+    @if (showResetForm()) {
+      <form (ngSubmit)="sendReset()" class="auth-form">
+        <p class="auth-reset-hint">Введите email, на который зарегистрирован аккаунт. Мы отправим ссылку для сброса пароля.</p>
+        <div class="auth-field">
+          <label for="reset-email" class="sr-only">Электронная почта</label>
+          <input
+            pInputText
+            id="reset-email"
+            type="email"
+            placeholder="Электронная почта"
+            [(ngModel)]="resetEmail"
+            name="resetEmail"
+            class="w-full"
+            required
+            autocomplete="email"
+          />
+        </div>
+        @if (resetSent()) {
+          <div class="auth-verify-banner" style="margin-bottom:0">
+            <div class="auth-verify-banner__content">
+              <i class="pi pi-envelope"></i>
+              <span>Письмо отправлено на <strong>{{ resetEmail }}</strong>. Перейдите по ссылке в письме, чтобы сбросить пароль.</span>
+            </div>
+          </div>
+        }
+        <button type="submit" class="auth-btn" [disabled]="loading() || resetSent()">
+          @if (loading()) {
+            <span class="auth-btn__spinner"></span>
+          }
+          Отправить
+        </button>
+      </form>
+      <div class="auth-toggle">
+        <button type="button" (click)="cancelReset()" class="auth-toggle__btn">Назад ко входу</button>
+      </div>
+    } @else {
+      <form (ngSubmit)="submit()" class="auth-form">
+        <div class="auth-field">
+          <label for="email" class="sr-only">Электронная почта</label>
+          <input
+            pInputText
+            id="email"
+            type="email"
+            placeholder="Электронная почта"
+            [(ngModel)]="email"
+            name="email"
+            class="w-full"
+            required
+            autocomplete="email"
+          />
+        </div>
+
+        <div class="auth-field">
+          <label for="password" class="sr-only">Пароль</label>
+          <input
+            pInputText
+            id="password"
+            type="password"
+            placeholder="Пароль"
+            [(ngModel)]="password"
+            name="password"
+            class="w-full"
+            required
+            autocomplete="current-password"
+          />
+        </div>
+
+        @if (isLogin()) {
+          <button type="button" (click)="openReset()" class="auth-forgot">Забыли пароль?</button>
+        }
+
+        <button type="submit" class="auth-btn" [disabled]="loading()">
+          @if (loading()) {
+            <span class="auth-btn__spinner"></span>
+          }
+          {{ isLogin() ? 'Войти' : 'Зарегистрироваться' }}
+        </button>
+      </form>
+
+      <div class="auth-toggle">
+        <button type="button" (click)="toggleMode()" class="auth-toggle__btn">
+          {{ isLogin() ? 'Нет аккаунта? Зарегистрироваться' : 'Уже есть аккаунт? Войти' }}
+        </button>
       </div>
     }
-
-    <form (ngSubmit)="submit()" class="auth-form">
-      <div class="auth-field">
-        <label for="email" class="sr-only">Электронная почта</label>
-        <input
-          pInputText
-          id="email"
-          type="email"
-          placeholder="Электронная почта"
-          [(ngModel)]="email"
-          name="email"
-          class="w-full"
-          required
-          autocomplete="email"
-        />
-      </div>
-
-      <div class="auth-field">
-        <label for="password" class="sr-only">Пароль</label>
-        <input
-          pInputText
-          id="password"
-          type="password"
-          placeholder="Пароль"
-          [(ngModel)]="password"
-          name="password"
-          class="w-full"
-          required
-          autocomplete="current-password"
-        />
-      </div>
-
-      <button type="submit" class="auth-btn" [disabled]="loading()">
-        @if (loading()) {
-          <span class="auth-btn__spinner"></span>
-        }
-        {{ isLogin() ? 'Войти' : 'Зарегистрироваться' }}
-      </button>
-    </form>
-
-    <div class="auth-toggle">
-      <button type="button" (click)="toggleMode()" class="auth-toggle__btn">
-        {{ isLogin() ? 'Нет аккаунта? Зарегистрироваться' : 'Уже есть аккаунт? Войти' }}
-      </button>
-    </div>
   </div>
 </div>

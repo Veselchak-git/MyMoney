@@ -42,6 +42,17 @@ __screenshots__/
 /src/environments/environment.ts
 /src/environments/environment.prod.ts
 
+# Android build
+/android/.gradle/
+/android/build/
+/android/app/build/
+/android/local.properties
+/android/captures/
+
+# Android signing
+/android/keystore.jks
+/android/keystore.properties
+
 # System files
 .DS_Store
 Thumbs.db
