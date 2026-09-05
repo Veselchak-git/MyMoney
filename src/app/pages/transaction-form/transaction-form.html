@@ -12,7 +12,7 @@
             type="button"
             class="type-toggle__btn--expense"
             [class.type-toggle__btn--active]="type() === 'expense'"
-            (click)="type.set('expense')"
+            (click)="setType('expense')"
             [attr.aria-pressed]="type() === 'expense'"
           >
             <i class="pi pi-arrow-down"></i>
@@ -22,7 +22,7 @@
             type="button"
             class="type-toggle__btn--income"
             [class.type-toggle__btn--active]="type() === 'income'"
-            (click)="type.set('income')"
+            (click)="setType('income')"
             [attr.aria-pressed]="type() === 'income'"
           >
             <i class="pi pi-arrow-up"></i>
@@ -44,6 +44,7 @@
           mode="decimal"
           [minFractionDigits]="2"
           [maxFractionDigits]="2"
+          (ngModelChange)="clearError()"
         />
       </div>
 
@@ -62,6 +63,7 @@
             optionValue="id"
             placeholder="Выберите категорию"
             class="w-full"
+            (ngModelChange)="clearError()"
           >
             <ng-template pTemplate="item" let-item>
               <div class="flex items-center gap-2">
@@ -95,6 +97,10 @@
         ></textarea>
       </div>
 
+      @if (error()) {
+        <div class="error">{{ error() }}</div>
+      }
+
       <div class="form-actions">
         <a routerLink="/transactions">
           <button type="button">Отмена</button>
@@ -103,7 +109,7 @@
           type="button"
           class="btn-primary"
           (click)="save()"
-          [disabled]="!categoryId || !amount || loading()"
+          [disabled]="loading() || !categoriesLoaded() || !!categoriesError()"
         >
           @if (loading()) {
             <span class="spinner"></span>

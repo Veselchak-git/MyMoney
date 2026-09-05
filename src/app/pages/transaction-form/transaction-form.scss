@@ -134,9 +134,11 @@ form {
 }
 
 .error {
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   color: var(--color-expense);
-  padding: 10px 0;
+  background: rgba(239, 68, 68, 0.08);
+  padding: 10px 14px;
+  border-radius: 10px;
 }
 
 .spinner {

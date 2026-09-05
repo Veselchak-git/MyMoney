@@ -30,9 +30,10 @@ export class TransactionForm {
   readonly isEdit = signal(false);
   readonly editId = signal<string | null>(null);
   readonly loading = signal(false);
+  readonly error = signal('');
 
   readonly type = signal<'income' | 'expense'>('expense');
-  amount = 0;
+  amount: number | null = null;
   categoryId = '';
   date = new Date();
   description = '';
@@ -72,17 +73,69 @@ export class TransactionForm {
     }
   }
 
+  setType(value: 'income' | 'expense'): void {
+    this.type.set(value);
+    this.categoryId = '';
+    this.error.set('');
+  }
+
+  clearError(): void {
+    this.error.set('');
+  }
+
+  private validate(): string {
+    if (!this.categoriesLoaded()) {
+      return 'Дождитесь загрузки категорий';
+    }
+    if (this.categoriesError()) {
+      return this.categoriesError()!;
+    }
+
+    const missingAmount = this.amount == null;
+    const nonPositiveAmount = !missingAmount && this.amount! <= 0;
+    const invalidCategory =
+      !this.categoryId || !this.categories().some(c => c.id === this.categoryId);
+
+    if (missingAmount && invalidCategory) {
+      return 'Укажите сумму и выберите категорию';
+    }
+    if (nonPositiveAmount && invalidCategory) {
+      return 'Сумма должна быть положительной и выберите категорию';
+    }
+    if (missingAmount) {
+      return 'Укажите сумму';
+    }
+    if (nonPositiveAmount) {
+      return 'Сумма должна быть положительной';
+    }
+    if (invalidCategory) {
+      return 'Выберите категорию';
+    }
+    return '';
+  }
+
   async save(): Promise<void> {
-    if (!this.categoryId || !this.amount) return;
+    this.error.set('');
+
+    const validationError = this.validate();
+    if (validationError) {
+      this.error.set(validationError);
+      return;
+    }
+
     const user = this.auth.currentUser;
-    if (!user) return;
+    if (!user) {
+      this.error.set('Войдите в аккаунт, чтобы сохранить');
+      return;
+    }
     this.loading.set(true);
 
     try {
+      const amount = this.amount!;
       if (this.isEdit() && this.editId()) {
         await this.transactionService.update(this.editId()!, {
           type: this.type(),
-          amount: this.amount,
+          amount,
           categoryId: this.categoryId,
           date: Timestamp.fromDate(this.date),
           description: this.description,
@@ -91,15 +144,16 @@ export class TransactionForm {
         await this.transactionService.create({
           userId: user.uid,
           type: this.type(),
-          amount: this.amount,
+          amount,
           categoryId: this.categoryId,
           date: Timestamp.fromDate(this.date),
           description: this.description,
         });
       }
       await this.router.navigate(['/transactions']);
-    } catch {
+    } catch (err) {
       console.error('Failed to save transaction');
+      this.error.set(err instanceof Error ? err.message : 'Не удалось сохранить транзакцию');
     } finally {
       this.loading.set(false);
     }

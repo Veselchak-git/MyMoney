@@ -18,6 +18,8 @@ export class App implements OnInit, OnDestroy {
   readonly user = signal(this.auth.currentUser);
   readonly mobileMenuOpen = signal(false);
   readonly verificationBannerDismissed = signal(false);
+  readonly showLogoutConfirm = signal(false);
+  readonly loggingOut = signal(false);
   private verifyTimer: ReturnType<typeof setInterval> | undefined;
 
   readonly navItems = [
@@ -101,13 +103,35 @@ export class App implements OnInit, OnDestroy {
 
   @HostListener('document:keydown', ['$event'])
   onKeydown(event: KeyboardEvent): void {
-    if (event.key === 'Escape') this.mobileMenuOpen.set(false);
+    if (event.key !== 'Escape') return;
+    if (this.showLogoutConfirm()) {
+      this.cancelLogout();
+      return;
+    }
+    this.mobileMenuOpen.set(false);
   }
 
-  async logout(): Promise<void> {
-    this.verificationBannerDismissed.set(false);
-    this.stopPolling();
-    await signOut(this.auth);
-    await this.router.navigate(['/auth']);
+  askLogout(): void {
+    this.mobileMenuOpen.set(false);
+    this.showLogoutConfirm.set(true);
+  }
+
+  cancelLogout(): void {
+    if (this.loggingOut()) return;
+    this.showLogoutConfirm.set(false);
+  }
+
+  async confirmLogout(): Promise<void> {
+    if (this.loggingOut()) return;
+    this.loggingOut.set(true);
+    try {
+      this.verificationBannerDismissed.set(false);
+      this.stopPolling();
+      await signOut(this.auth);
+      this.showLogoutConfirm.set(false);
+      await this.router.navigate(['/auth']);
+    } finally {
+      this.loggingOut.set(false);
+    }
   }
 }

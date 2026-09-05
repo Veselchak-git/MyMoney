@@ -28,6 +28,8 @@ export class Categories {
   type: 'income' | 'expense' = 'expense';
   loading = signal(false);
   deleting = signal(false);
+  readonly error = signal('');
+  private saveGeneration = 0;
 
   get iconLabel(): string {
     return this.icons.find(i => i.value === this.icon)?.label ?? 'Иконка';
@@ -75,6 +77,7 @@ export class Categories {
     this.name = '';
     this.icon = 'pi pi-tag';
     this.type = type;
+    this.error.set('');
     this.showDialog.set(true);
   }
 
@@ -83,42 +86,68 @@ export class Categories {
     this.name = cat.name;
     this.icon = cat.icon;
     this.type = cat.type === 'both' ? 'expense' : cat.type;
+    this.error.set('');
     this.showDialog.set(true);
   }
 
+  clearError(): void {
+    this.error.set('');
+  }
+
   async save(): Promise<void> {
-    if (!this.name) return;
+    this.error.set('');
+    const trimmedName = this.name.trim();
+    if (!trimmedName) {
+      this.error.set('Укажите название');
+      return;
+    }
+
     const user = this.auth.currentUser;
-    if (!user) return;
+    if (!user) {
+      this.error.set('Войдите в аккаунт, чтобы сохранить');
+      return;
+    }
+
+    const generation = ++this.saveGeneration;
     this.loading.set(true);
 
     try {
       if (this.editingId()) {
         await this.categoryService.update(this.editingId()!, {
-          name: this.name,
+          name: trimmedName,
           icon: this.icon,
           type: this.type,
         });
       } else {
         await this.categoryService.create({
           userId: user.uid,
-          name: this.name,
+          name: trimmedName,
           icon: this.icon,
           type: this.type,
           isDefault: false,
         });
       }
+      if (generation !== this.saveGeneration) return;
       this.showDialog.set(false);
+    } catch (err) {
+      if (generation !== this.saveGeneration) return;
+      this.error.set(err instanceof Error ? err.message : 'Не удалось сохранить категорию');
     } finally {
-      this.loading.set(false);
+      if (generation === this.saveGeneration) {
+        this.loading.set(false);
+      }
     }
   }
 
   closeDialog(): void {
+    if (this.loading()) return;
+    this.saveGeneration++;
+    this.loading.set(false);
     this.showDialog.set(false);
     this.iconOpen.set(false);
     this.name = '';
     this.icon = 'pi pi-tag';
+    this.error.set('');
   }
 
   deleteConfirmMessage(cat: Category): string {
@@ -133,6 +162,7 @@ export class Categories {
   }
 
   cancelDelete(): void {
+    if (this.deleting()) return;
     this.pendingDelete.set(null);
   }
 

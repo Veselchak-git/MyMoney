@@ -1,6 +1,7 @@
 import { Component, inject, computed, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TransactionService, CategoryService } from '../../services';
+import { Transaction } from '../../models';
 import { formatAmount, formatShortDate } from '../../utils';
 import { SelectModule } from 'primeng/select';
 import { InputTextModule } from 'primeng/inputtext';
@@ -20,6 +21,9 @@ export class Transactions {
   readonly transactions = this.transactionService.transactions;
   readonly categories = this.categoryService.categories;
   readonly categoryMap = this.categoryService.categoryMap;
+
+  readonly pendingDelete = signal<Transaction | null>(null);
+  readonly deleting = signal(false);
 
   readonly filterTypeOptions = [
     { label: 'Все', value: 'all' },
@@ -64,12 +68,32 @@ export class Transactions {
     return list;
   });
 
-  async deleteTransaction(id: string): Promise<void> {
-    if (!confirm('Удалить транзакцию?')) return;
+  deleteConfirmMessage(tx: Transaction): string {
+    const name = this.categoryMap().get(tx.categoryId)?.name || 'Без категории';
+    const sign = tx.type === 'income' ? '+' : '−';
+    return `Удалить транзакцию «${name}» (${sign}${formatAmount(tx.amount)})?`;
+  }
+
+  askDelete(tx: Transaction): void {
+    this.pendingDelete.set(tx);
+  }
+
+  cancelDelete(): void {
+    if (this.deleting()) return;
+    this.pendingDelete.set(null);
+  }
+
+  async confirmDelete(): Promise<void> {
+    const tx = this.pendingDelete();
+    if (!tx) return;
+    this.deleting.set(true);
     try {
-      await this.transactionService.delete(id);
+      await this.transactionService.delete(tx.id);
+      this.pendingDelete.set(null);
     } catch {
       console.error('Failed to delete transaction');
+    } finally {
+      this.deleting.set(false);
     }
   }
 
