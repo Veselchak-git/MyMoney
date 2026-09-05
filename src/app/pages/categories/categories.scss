@@ -234,6 +234,58 @@
   gap: 14px;
 }
 
+.dialog-message {
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.45;
+  color: var(--color-text);
+}
+
+.dialog-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.dialog-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 40px;
+  padding: 0 16px;
+  border-radius: 10px;
+  border: none;
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, opacity 0.15s;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  &--cancel {
+    background: var(--surface-hover, #f3f4f6);
+    color: var(--color-text);
+  }
+
+  &--cancel:hover:not(:disabled) {
+    background: var(--border-color, #e5e7eb);
+  }
+
+  &--danger {
+    background: var(--color-expense, #ef4444);
+    color: #fff;
+  }
+
+  &--danger:hover:not(:disabled) {
+    filter: brightness(0.95);
+  }
+}
+
 .icon-picker__trigger {
   display: flex;
   align-items: center;

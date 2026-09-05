@@ -18,6 +18,7 @@ export class Categories {
   readonly categories = this.categoryService.categories;
 
   readonly showDialog = signal(false);
+  readonly pendingDelete = signal<Category | null>(null);
   readonly editingId = signal<string | null>(null);
   readonly iconOpen = signal(false);
   readonly incomeOpen = signal(true);
@@ -26,6 +27,7 @@ export class Categories {
   icon = 'pi pi-tag';
   type: 'income' | 'expense' = 'expense';
   loading = signal(false);
+  deleting = signal(false);
 
   get iconLabel(): string {
     return this.icons.find(i => i.value === this.icon)?.label ?? 'Иконка';
@@ -119,12 +121,32 @@ export class Categories {
     this.icon = 'pi pi-tag';
   }
 
-  async delete(id: string): Promise<void> {
-    if (!confirm('Удалить категорию?')) return;
+  deleteConfirmMessage(cat: Category): string {
+    if (cat.isDefault && this.categories().length > 1) {
+      return `Удалить категорию «${cat.name}»? Она не будет создана снова автоматически.`;
+    }
+    return `Удалить категорию «${cat.name}»?`;
+  }
+
+  askDelete(cat: Category): void {
+    this.pendingDelete.set(cat);
+  }
+
+  cancelDelete(): void {
+    this.pendingDelete.set(null);
+  }
+
+  async confirmDelete(): Promise<void> {
+    const cat = this.pendingDelete();
+    if (!cat) return;
+    this.deleting.set(true);
     try {
-      await this.categoryService.delete(id);
+      await this.categoryService.delete(cat.id);
+      this.pendingDelete.set(null);
     } catch {
       console.error('Failed to delete category');
+    } finally {
+      this.deleting.set(false);
     }
   }
 }

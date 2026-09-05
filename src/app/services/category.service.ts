@@ -14,6 +14,7 @@ import {
   doc,
   updateDoc,
   deleteDoc,
+  writeBatch,
   Unsubscribe,
 } from 'firebase/firestore';
 
@@ -100,12 +101,17 @@ export class CategoryService {
       const ref = collection(this.db, 'categories');
       const q = query(ref, where('userId', '==', user.uid));
       const snap = await getDocs(q);
-      const existingNames = new Set(snap.docs.map(d => d.data()['name']));
+      if (!snap.empty) return;
 
+      // Re-check emptiness to reduce concurrent duplicate seeds.
+      const snapAgain = await getDocs(q);
+      if (!snapAgain.empty) return;
+
+      const batch = writeBatch(this.db);
       for (const cat of DEFAULT_CATEGORIES) {
-        if (existingNames.has(cat.name)) continue;
-        await addDoc(ref, { ...cat, userId: user.uid });
+        batch.set(doc(ref), { ...cat, userId: user.uid });
       }
+      await batch.commit();
     } catch (err) {
       console.error('Failed to create default categories:', err);
     } finally {
