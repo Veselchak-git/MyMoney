@@ -14,7 +14,7 @@
       <p-select
         [options]="filterTypeOptions"
         [ngModel]="filterType()"
-        (ngModelChange)="filterType.set($event)"
+        (ngModelChange)="setFilterType($event)"
         optionLabel="label"
         optionValue="value"
         placeholder="Тип"
@@ -22,7 +22,7 @@
       />
 
       <p-select
-        [options]="categories()"
+        [options]="filterCategoryOptions()"
         [ngModel]="filterCategory()"
         (ngModelChange)="filterCategory.set($event ?? '')"
         optionLabel="name"

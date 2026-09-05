@@ -36,6 +36,13 @@ export class Transactions {
   readonly searchText = signal('');
   readonly filterDate = signal<Date | undefined>(undefined);
 
+  readonly filterCategoryOptions = computed(() => {
+    const type = this.filterType();
+    if (type === 'income') return this.categoryService.incomeCategories();
+    if (type === 'expense') return this.categoryService.expenseCategories();
+    return this.categoryService.categories();
+  });
+
   readonly filteredTransactions = computed(() => {
     let list = this.transactions();
 
@@ -94,6 +101,14 @@ export class Transactions {
       console.error('Failed to delete transaction');
     } finally {
       this.deleting.set(false);
+    }
+  }
+
+  setFilterType(value: string): void {
+    this.filterType.set(value);
+    const categoryId = this.filterCategory();
+    if (categoryId && !this.filterCategoryOptions().some(c => c.id === categoryId)) {
+      this.filterCategory.set('');
     }
   }
 
