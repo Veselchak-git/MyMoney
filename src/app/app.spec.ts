@@ -3,10 +3,17 @@ import { provideRouter } from '@angular/router';
 import { App } from './app';
 import { Auth } from '@angular/fire/auth';
 import { Firestore } from '@angular/fire/firestore';
-import { CategoryService } from './services';
+import { CategoryService, UpdateService } from './services';
 
 const mockCategoryService = {
   createInitialDefaults: () => {},
+};
+
+const mockUpdateService = {
+  updateAvailable: () => null,
+  checkForUpdate: () => Promise.resolve(),
+  dismiss: () => {},
+  openDownload: () => Promise.resolve(),
 };
 
 describe('App', () => {
@@ -27,6 +34,7 @@ describe('App', () => {
         },
         { provide: Firestore, useValue: {} },
         { provide: CategoryService, useValue: mockCategoryService },
+        { provide: UpdateService, useValue: mockUpdateService },
       ],
     }).compileComponents();
   });

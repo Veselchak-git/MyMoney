@@ -1,5 +1,5 @@
 import { Component, inject, computed } from '@angular/core';
-import { TransactionService, CategoryService, AnalyticsService } from '../../services';
+import { TransactionService, CategoryService, AnalyticsService, ThemeService } from '../../services';
 import { formatAmount } from '../../utils';
 import { ChartModule } from 'primeng/chart';
 import type { ChartOptions } from 'chart.js';
@@ -14,6 +14,7 @@ export class Analytics {
   private transactionService = inject(TransactionService);
   private categoryService = inject(CategoryService);
   private analyticsService = inject(AnalyticsService);
+  private themeService = inject(ThemeService);
 
   readonly transactions = this.transactionService.transactions;
   readonly categories = this.categoryService.categories;
@@ -47,13 +48,27 @@ export class Analytics {
     }],
   }));
 
-  readonly chartOptions: ChartOptions<'pie'> = {
-    plugins: {
-      legend: { position: 'bottom', labels: { font: { size: 11 } } },
-    },
-    responsive: true,
-    maintainAspectRatio: false,
-  };
+  private readonly chartColors = computed(() => {
+    const dark = this.themeService.resolvedTheme() === 'dark';
+    return {
+      muted: dark ? '#94A3B8' : '#6B7280',
+      grid: dark ? '#334155' : '#E5E7EB',
+    };
+  });
+
+  readonly chartOptions = computed<ChartOptions<'pie'>>(() => {
+    const { muted } = this.chartColors();
+    return {
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: { font: { size: 11 }, color: muted },
+        },
+      },
+      responsive: true,
+      maintainAspectRatio: false,
+    };
+  });
 
   readonly barChartData = computed(() => ({
     labels: this.monthlyTotals().map(i => i.month),
@@ -73,17 +88,33 @@ export class Analytics {
     ],
   }));
 
-  readonly barOptions: ChartOptions<'bar'> = {
-    plugins: {
-      legend: { position: 'top', labels: { font: { size: 12 } } },
-    },
-    responsive: true,
-    maintainAspectRatio: false,
-    scales: {
-      x: { grid: { display: false } },
-      y: { beginAtZero: true, ticks: { callback: (v: number | string) => formatAmount(Number(v)) } },
-    },
-  };
+  readonly barOptions = computed<ChartOptions<'bar'>>(() => {
+    const { muted, grid } = this.chartColors();
+    return {
+      plugins: {
+        legend: {
+          position: 'top',
+          labels: { font: { size: 12 }, color: muted },
+        },
+      },
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        x: {
+          grid: { display: false },
+          ticks: { color: muted },
+        },
+        y: {
+          beginAtZero: true,
+          grid: { color: grid },
+          ticks: {
+            color: muted,
+            callback: (v: number | string) => formatAmount(Number(v)),
+          },
+        },
+      },
+    };
+  });
 
   readonly lineChartData = computed(() => {
     const monthly = this.monthlyTotals();
@@ -102,20 +133,33 @@ export class Analytics {
     };
   });
 
-  readonly lineOptions: ChartOptions<'line'> = {
-    plugins: {
-      legend: { position: 'top', labels: { font: { size: 12 } } },
-    },
-    responsive: true,
-    maintainAspectRatio: false,
-    scales: {
-      x: { grid: { display: false } },
-      y: {
-        beginAtZero: true,
-        ticks: { callback: (v: number | string) => formatAmount(Number(v)) },
+  readonly lineOptions = computed<ChartOptions<'line'>>(() => {
+    const { muted, grid } = this.chartColors();
+    return {
+      plugins: {
+        legend: {
+          position: 'top',
+          labels: { font: { size: 12 }, color: muted },
+        },
       },
-    },
-  };
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        x: {
+          grid: { display: false },
+          ticks: { color: muted },
+        },
+        y: {
+          beginAtZero: true,
+          grid: { color: grid },
+          ticks: {
+            color: muted,
+            callback: (v: number | string) => formatAmount(Number(v)),
+          },
+        },
+      },
+    };
+  });
 
   protected readonly formatAmount = formatAmount;
 }

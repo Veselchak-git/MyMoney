@@ -142,18 +142,18 @@
   padding: 8px 18px;
   border-radius: 20px;
   border: 2px solid transparent;
-  background: #F3F4F6;
+  background: var(--surface-hover);
   font-family: var(--font-display);
   font-size: 0.8125rem;
   font-weight: 600;
-  color: #9CA3AF;
+  color: var(--text-placeholder);
   cursor: pointer;
   transition: all 0.2s;
   letter-spacing: 0.01em;
 
   &:hover {
-    background: #E5E7EB;
-    color: #6B7280;
+    background: var(--border-color);
+    color: var(--color-text-muted);
   }
 }
 
@@ -219,7 +219,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 12px 0;
-  border-bottom: 1px solid rgba(0,0,0,0.04);
+  border-bottom: 1px solid var(--border-color);
 }
 
 .tx-row:last-child {
@@ -273,7 +273,7 @@
 .summary-row__divider {
   width: 1px;
   height: 48px;
-  background: #E5E7EB;
+  background: var(--border-color);
   flex-shrink: 0;
 }
 

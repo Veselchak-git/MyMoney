@@ -11,6 +11,24 @@
   <link rel="manifest" href="manifest.webmanifest">
   <meta name="theme-color" content="#10B981">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://*.firebaseio.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://*.googleapis.com capacitor://localhost http://localhost; manifest-src 'self'">
+  <script>
+    (function () {
+      var dark = false;
+      try {
+        var stored = localStorage.getItem('mymoney-theme');
+        if (stored === 'dark') dark = true;
+        else if (stored === 'light') dark = false;
+        else dark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      } catch (e) {
+        dark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      }
+      var root = document.documentElement;
+      root.classList.toggle('dark', dark);
+      root.style.colorScheme = dark ? 'dark' : 'light';
+      var meta = document.querySelector('meta[name="theme-color"]');
+      if (meta) meta.setAttribute('content', dark ? '#0B1220' : '#10B981');
+    })();
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">

@@ -1,7 +1,9 @@
 import { Component, inject, signal, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { RouterOutlet, RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { Auth, signOut } from '@angular/fire/auth';
-import { CategoryService, VerificationService } from './services';
+import { Capacitor, PluginListenerHandle } from '@capacitor/core';
+import { App as CapApp } from '@capacitor/app';
+import { CategoryService, VerificationService, ThemeService, UpdateService } from './services';
 
 @Component({
   selector: 'app-root',
@@ -14,6 +16,8 @@ export class App implements OnInit, OnDestroy {
   private router = inject(Router);
   private categoryService = inject(CategoryService);
   private verificationService = inject(VerificationService);
+  readonly themeService = inject(ThemeService);
+  readonly updateService = inject(UpdateService);
 
   readonly user = signal(this.auth.currentUser);
   readonly mobileMenuOpen = signal(false);
@@ -21,6 +25,8 @@ export class App implements OnInit, OnDestroy {
   readonly showLogoutConfirm = signal(false);
   readonly loggingOut = signal(false);
   private verifyTimer: ReturnType<typeof setInterval> | undefined;
+  private appStateListener: PluginListenerHandle | undefined;
+  private authUnsub: (() => void) | undefined;
 
   readonly navItems = [
     { path: '/', label: 'Главная', icon: 'pi pi-home' },
@@ -39,10 +45,11 @@ export class App implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.auth.onAuthStateChanged(user => {
+    this.authUnsub = this.auth.onAuthStateChanged(user => {
       this.user.set(user);
       if (user && !this.isAuthPage()) {
         this.categoryService.createInitialDefaults();
+        void this.updateService.checkForUpdate();
         if (user.emailVerified) {
           this.verificationBannerDismissed.set(false);
           this.stopPolling();
@@ -58,10 +65,14 @@ export class App implements OnInit, OnDestroy {
         }
       }
     });
+
+    void this.setupAppResumeListener();
   }
 
   ngOnDestroy(): void {
     this.stopPolling();
+    this.authUnsub?.();
+    void this.appStateListener?.remove();
   }
 
   async resendVerification(): Promise<void> {
@@ -83,6 +94,25 @@ export class App implements OnInit, OnDestroy {
     this.stopPolling();
   }
 
+  dismissUpdate(): void {
+    this.updateService.dismiss();
+  }
+
+  async openUpdate(): Promise<void> {
+    await this.updateService.openDownload();
+  }
+
+  private async setupAppResumeListener(): Promise<void> {
+    if (!Capacitor.isNativePlatform()) return;
+    this.appStateListener = await CapApp.addListener('appStateChange', ({ isActive }) => {
+      if (!isActive) return;
+      const user = this.auth.currentUser;
+      if (user && !this.isAuthPage()) {
+        void this.updateService.checkForUpdate({ force: true });
+      }
+    });
+  }
+
   private startPolling(): void {
     this.stopPolling();
     this.verifyTimer = setInterval(() => {
@@ -101,11 +131,22 @@ export class App implements OnInit, OnDestroy {
     }
   }
 
+  @HostListener('window:resize')
+  onResize(): void {
+    if (window.innerWidth >= 640 && this.mobileMenuOpen()) {
+      this.mobileMenuOpen.set(false);
+    }
+  }
+
   @HostListener('document:keydown', ['$event'])
   onKeydown(event: KeyboardEvent): void {
     if (event.key !== 'Escape') return;
     if (this.showLogoutConfirm()) {
       this.cancelLogout();
+      return;
+    }
+    if (this.updateService.updateAvailable() && !this.updateService.updateAvailable()?.forceUpdate) {
+      this.dismissUpdate();
       return;
     }
     this.mobileMenuOpen.set(false);

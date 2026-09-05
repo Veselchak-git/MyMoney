@@ -6,7 +6,7 @@
       <h3 class="font-display font-semibold text-base m-0 mb-4">Распределение расходов</h3>
       <div class="chart-container">
         @if (expenseBreakdown().length > 0) {
-          <p-chart type="pie" [data]="pieChartData()" [options]="chartOptions" [style]="{ height: '100%' }" />
+          <p-chart type="pie" [data]="pieChartData()" [options]="chartOptions()" [style]="{ height: '100%' }" />
         } @else {
           <div class="chart-empty">Нет данных за месяц</div>
         }
@@ -16,7 +16,7 @@
     <div class="card">
       <h3 class="font-display font-semibold text-base m-0 mb-4">Доходы и расходы</h3>
       <div class="chart-container">
-        <p-chart type="bar" [data]="barChartData()" [options]="barOptions" [style]="{ height: '100%' }" />
+        <p-chart type="bar" [data]="barChartData()" [options]="barOptions()" [style]="{ height: '100%' }" />
       </div>
     </div>
   </div>
@@ -24,7 +24,7 @@
   <div class="card mt-4">
     <h3 class="font-display font-semibold text-base m-0 mb-4">Динамика баланса</h3>
     <div class="chart-container chart-container--tall">
-      <p-chart type="line" [data]="lineChartData()" [options]="lineOptions" [style]="{ height: '100%' }" />
+      <p-chart type="line" [data]="lineChartData()" [options]="lineOptions()" [style]="{ height: '100%' }" />
     </div>
   </div>
 

@@ -16,7 +16,7 @@
 }
 
 .cat-row:hover {
-  background: rgba(0,0,0,0.02);
+  background: var(--surface-hover);
 }
 
 .cat-row__left {

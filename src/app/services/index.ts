@@ -3,3 +3,5 @@ export { CategoryService } from './category.service';
 export { AnalyticsService } from './analytics.service';
 export { BiometricService } from './biometric.service';
 export { VerificationService } from './verification.service';
+export { ThemeService } from './theme.service';
+export { UpdateService } from './update.service';

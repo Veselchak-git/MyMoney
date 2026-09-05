@@ -5,17 +5,17 @@
   justify-content: center;
   padding: 24px 16px;
   padding: max(24px, env(safe-area-inset-top)) 16px 24px 16px;
-  background: #ffffff;
+  background: var(--color-bg);
 }
 
 .auth-card {
   width: 100%;
   max-width: 400px;
-  background: #F3F4F6;
+  background: var(--color-surface);
   border-radius: 20px;
   padding: 36px 28px 28px;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.06);
-  border: 1px solid #E5E7EB;
+  box-shadow: var(--shadow-card);
+  border: 1px solid var(--border-color);
 }
 
 .auth-card__header {
@@ -81,7 +81,7 @@
   align-items: flex-start;
   gap: 8px;
   font-size: 0.8125rem;
-  color: #374151;
+  color: var(--color-text);
   line-height: 1.4;
 }
 
@@ -154,12 +154,12 @@
   transition: border-color 0.15s;
   outline: none;
   font-family: var(--font-body);
-  background: #ffffff;
-  color: #111827;
+  background: var(--color-surface);
+  color: var(--color-text);
 }
 
 ::ng-deep .auth-field .p-inputtext::placeholder {
-  color: #9CA3AF;
+  color: var(--text-placeholder);
 }
 
 ::ng-deep .auth-field .p-inputtext:focus {

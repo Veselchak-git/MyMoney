@@ -32,6 +32,29 @@
   --shadow-select: 0 4px 16px rgba(0,0,0,0.1);
 }
 
+html.dark {
+  --color-primary: #34D399;
+  --color-primary-dark: #10B981;
+  --color-primary-light: #065F46;
+  --color-primary-lighter: #022C22;
+  --color-income: #34D399;
+  --color-expense: #F87171;
+  --color-warning: #FBBF24;
+  --color-surface: #1E293B;
+  --color-bg: #0B1220;
+  --color-text: #F1F5F9;
+  --color-text-muted: #94A3B8;
+  --border-color: #334155;
+  --border-color-hover: #475569;
+  --surface-hover: #334155;
+  --surface-selected: #064E3B;
+  --text-placeholder: #64748B;
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.35), 0 1px 2px rgba(0,0,0,0.25);
+  --shadow-card-hover: 0 10px 25px rgba(0,0,0,0.45);
+  --shadow-float: 0 4px 12px rgba(0,0,0,0.4);
+  --shadow-select: 0 4px 16px rgba(0,0,0,0.4);
+}
+
 * {
   -webkit-tap-highlight-color: transparent;
 }
@@ -266,14 +289,14 @@ h1, h2, h3, h4, h5, h6 {
 .hidden { display: none; }
 
 .text-primary { color: var(--color-primary); }
-.text-gray-400 { color: #9CA3AF; }
-.text-gray-500 { color: #6B7280; }
-.text-gray-600 { color: #4B5563; }
-.text-gray-800 { color: #1F2937; }
-.bg-white { background: #fff; }
-.bg-gray-100 { background: #F3F4F6; }
+.text-gray-400 { color: var(--text-placeholder); }
+.text-gray-500 { color: var(--color-text-muted); }
+.text-gray-600 { color: var(--color-text-muted); }
+.text-gray-800 { color: var(--color-text); }
+.bg-white { background: var(--color-surface); }
+.bg-gray-100 { background: var(--surface-hover); }
 .border-b { border-bottom: 1px solid; }
-.border-gray-200 { border-color: #E5E7EB; }
+.border-gray-200 { border-color: var(--border-color); }
 
 .transition-all { transition: all 0.15s; }
 .transition-colors { transition: background-color 0.15s, color 0.15s, border-color 0.15s; }
@@ -296,7 +319,7 @@ h1, h2, h3, h4, h5, h6 {
 .space-y-4 > * + * { margin-top: 16px; }
 
 .hover\:underline:hover { text-decoration: underline; }
-.hover\:bg-gray-100:hover { background: #F3F4F6; }
+.hover\:bg-gray-100:hover { background: var(--surface-hover); }
 
 .sr-only {
   position: absolute;
