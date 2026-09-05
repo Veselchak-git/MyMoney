@@ -34,6 +34,11 @@ service cloud.firestore {
       allow delete: if isAuth() && resource.data.userId == request.auth.uid;
     }
 
+    match /appConfig/{docId} {
+      allow read: if isAuth();
+      allow write: if false;
+    }
+
     match /{document=**} {
       allow read, write: if false;
     }
